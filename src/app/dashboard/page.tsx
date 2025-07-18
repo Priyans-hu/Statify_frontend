@@ -21,13 +21,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/features/loading/loadingSlice';
 
 export default function DashboardPage() {
   const [services, setServices] = useState<any[]>([]);
   const [name, setName] = useState('');
   const [status, setStatus] = useState('operational');
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(setLoading(false));
     fetchServices();
   }, []);
 

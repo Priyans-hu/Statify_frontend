@@ -1,7 +1,13 @@
+"use client";
 import ServiceCard from '@/components/serviceCard';
 import IncidentTimeline from '@/components/IndicatorTimeline';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/features/loading/loadingSlice';
 
-const services = [
+type ServiceStatus = 'operational' | 'degraded' | 'outage';
+
+const services: { name: string; status: ServiceStatus }[] = [
   { name: 'API Gateway', status: 'operational' },
   { name: 'Database', status: 'degraded' },
 ];
@@ -15,6 +21,10 @@ const incidents = [
 ];
 
 export default function StatusPage() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+        dispatch(setLoading(false));
+  }, []);
   return (
     <main className='max-w-3xl mx-auto p-6 space-y-6'>
       <h1 className='text-2xl font-semibold'>Service Status</h1>
