@@ -120,3 +120,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.ant-form-item {
+  position: sticky;
+  margin-bottom: 10px !important;
+}
