@@ -49,10 +49,7 @@ export default function Header() {
 
   return (
     <>
-      <AuthModal
-        visible={showAuthModal}
-        onClose={() => setShowAuthModal(false)}
-      />
+      <AuthModal visible={showAuthModal} onClose={() => setShowAuthModal(false)} />
       <nav className="p-4 flex justify-between items-center !text-white">
         <div className="flex gap-6">
           <Button
