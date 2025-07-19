@@ -26,16 +26,19 @@ import { Spin } from 'antd';
 import { toast } from 'react-toastify';
 import { getItem } from '@/lib/utils';
 import { useStatusOptions } from '@/hooks/useStatusOptions';
+import { useParams } from 'next/navigation';
 
-export default function DashboardPage({ params }: { params: { org: string } }) {
-  const org = params.org;
+export default function DashboardPage() {
+  const params = useParams();
+  const org = params?.org;
   const [services, setServices] = useState<any[]>([]);
   const [name, setName] = useState('');
-  const [status, setStatus] = useState('operational');
+  const [status, setStatus] = useState("");
   const { statusOptions, statusCodeToColor, statusCodeToString } =
     useStatusOptions();
   const dispatch = useDispatch();
   const [currentLoading, setCurrentLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     dispatch(setLoading(false));
@@ -65,6 +68,10 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
   };
 
   const handleAddService = async () => {
+    if(!name || !status) {
+      toast.error('Please fill in all fields');
+      return;
+    }
     try {
       const config = {
         url: `${Config.API_BASE_URL}/services?org=${org}`,
@@ -77,8 +84,10 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
       };
       setCurrentLoading(true);
       await axios(config);
-      setName('');
-      setStatus('operational');
+      setName("");
+      setStatus("");
+      handleDialogChange(false);
+      toast.success('Service added successfully');
       fetchServices();
     } catch (error) {
       console.error('Error adding service:', error);
@@ -110,50 +119,58 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
     }
   };
 
+  const handleDialogChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen){
+      setName('');
+      setStatus("");
+    }
+  };
+
   return (
     <Spin spinning={currentLoading}>
       <main className="max-w-4xl mx-auto p-6 space-y-6 min-h-screen">
         <div className="flex justify-between items-center ">
           <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="bg-[#212937] !text-white">Add Service</Button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#212937] border-0">
-              <DialogHeader>
-                <DialogTitle className="text-center">
-                  Add New Service
-                </DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <Input
-                  placeholder="Service Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-800 text-white">
+          <Spin spinning={currentLoading}>
+            <Dialog open={open} onOpenChange={handleDialogChange}>
+              <DialogTrigger asChild>
+                <Button className="bg-[#212937] !text-white">Add Service</Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#212937] border-0">
+                <DialogHeader>
+                  <DialogTitle className="text-center">
+                    Add New Service
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    placeholder="Service Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <Select value={status} onValueChange={setStatus}>
+                    <SelectTrigger className="w-full text-white">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
                     <SelectContent className="bg-slate-800 text-white">
-                      {statusOptions.map((option) => (
-                        <SelectItem key={option.id} value={option.id}>
-                          {option.status}
-                        </SelectItem>
-                      ))}
+                        {statusOptions.map((option) => (
+                          <SelectItem key={option.id} value={`${option.id}`}>
+                            {option.status}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
-                  </SelectContent>
-                </Select>
-                <Button
-                  className="bg-green-600 text-white text-md"
-                  onClick={handleAddService}
-                >
-                  Submit
-                </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+                  </Select>
+                  <Button
+                    className="bg-green-600 text-white text-md"
+                    onClick={handleAddService}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </Spin>
         </div>
 
         <section className="grid gap-4">
