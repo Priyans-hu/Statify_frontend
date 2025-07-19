@@ -18,19 +18,12 @@ type Service = {
   status: String;
 };
 
-const incidents = [
-  {
-    title: 'Database latency spike',
-    description: 'We are investigating elevated latencies.',
-    time: '2025-07-16 10:20 AM',
-  },
-];
-
 export default function StatusPage({ params }: { params: { org: string } }) {
   const org = params.org;
   const dispatch = useDispatch();
   const [services, setServices] = useState<Service[]>([]);
   const { statusCodeToColor, statusCodeToString } = useStatusOptions();
+  const [incidents, setIncidents] = useState<any[]>([]);
 
   useEffect(() => {
     dispatch(setLoading(false));
@@ -46,7 +39,19 @@ export default function StatusPage({ params }: { params: { org: string } }) {
       }
     };
 
+    const fetchIncidents = async () => {
+      try {
+        const res = await axios.get(
+          `${Config.API_BASE_URL}/incidents?org=${org}`
+        );
+        setIncidents(res?.data?.incidents || []);
+      } catch (err) {
+        console.error('Failed to load incidents:', err);
+      }
+    };
+    
     fetchServices();
+    fetchIncidents();
   }, []);
 
   return (
