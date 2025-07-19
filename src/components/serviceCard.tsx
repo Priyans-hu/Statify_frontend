@@ -1,23 +1,22 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useStatusOptions } from '@/hooks/useStatusOptions';
 
 type Props = {
   name: string;
-  status: 'operational' | 'degraded' | 'outage';
-};
-
-const statusColor = {
-  operational: 'bg-green-500',
-  degraded: 'bg-yellow-500',
-  outage: 'bg-red-500',
+  status: string; // 'operational', 'degraded', etc
 };
 
 export default function ServiceCard({ name, status }: Props) {
+  const { statusLabelToColor } = useStatusOptions();
+
   return (
-    <Card className='w-full'>
-      <CardContent className='flex justify-between items-center p-4'>
+    <Card className='w-full bg-[#212937] text-white border-0'>
+      <CardContent className='flex justify-between items-center px-4'>
         <div className='text-lg font-medium'>{name}</div>
-        <Badge className={statusColor[status]}>{status}</Badge>
+        <Badge className={`p-2 ${statusLabelToColor(status)} text-md`}>
+          {status}
+        </Badge>
       </CardContent>
     </Card>
   );

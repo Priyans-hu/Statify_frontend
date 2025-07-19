@@ -20,10 +20,10 @@ export const useStatusOptions = () => {
   }, []);
 
   const statusColorMap: Record<number, string> = {
-    1: 'bg-green-600',
-    2: 'bg-yellow-600',
-    3: 'bg-orange-500',
-    4: 'bg-red-700',
+    1: 'bg-green-600', // operational
+    2: 'bg-yellow-600', // degraded
+    3: 'bg-orange-500', // partial outage
+    4: 'bg-red-700', // major outage
   };
 
   const statusCodeToString = (statusCode: number): string => {
@@ -35,9 +35,19 @@ export const useStatusOptions = () => {
     return statusColorMap[statusCode] || 'bg-gray-500';
   };
 
+  const statusLabelToColor = (status: string): string => {
+    const normalized = status.toLowerCase();
+    if (normalized.includes('operational')) return 'bg-green-600';
+    if (normalized.includes('degraded')) return 'bg-yellow-600';
+    if (normalized.includes('partial')) return 'bg-orange-500';
+    if (normalized.includes('outage')) return 'bg-red-700';
+    return 'bg-gray-500';
+  };
+
   return {
     statusOptions,
     statusCodeToString,
     statusCodeToColor,
+    statusLabelToColor,
   };
 };

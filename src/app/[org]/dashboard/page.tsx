@@ -27,7 +27,8 @@ import { toast } from 'react-toastify';
 import { getItem } from '@/lib/utils';
 import { useStatusOptions } from '@/hooks/useStatusOptions';
 
-export default function DashboardPage() {
+export default function DashboardPage({ params }: { params: { org: string } }) {
+  const org = params.org;
   const [services, setServices] = useState<any[]>([]);
   const [name, setName] = useState('');
   const [status, setStatus] = useState('operational');
@@ -45,7 +46,7 @@ export default function DashboardPage() {
     setCurrentLoading(true);
     try {
       const config = {
-        url: Config.API_BASE_URL + '/services',
+        url: `${Config.API_BASE_URL}/services?org=${org}`,
         method: 'get',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ export default function DashboardPage() {
   const handleAddService = async () => {
     try {
       const config = {
-        url: Config.API_BASE_URL + '/services',
+        url: `${Config.API_BASE_URL}/services?org=${org}`,
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -112,15 +113,17 @@ export default function DashboardPage() {
   return (
     <Spin spinning={currentLoading}>
       <main className='max-w-4xl mx-auto p-6 space-y-6 min-h-screen'>
-        <div className='flex justify-between items-center'>
+        <div className='flex justify-between items-center '>
           <h1 className='text-2xl font-semibold'>Admin Dashboard</h1>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>Add Service</Button>
+              <Button className='bg-[#212937] !text-white'>Add Service</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className='bg-[#212937] border-0'>
               <DialogHeader>
-                <DialogTitle>Add New Service</DialogTitle>
+                <DialogTitle className='text-center'>
+                  Add New Service
+                </DialogTitle>
               </DialogHeader>
               <div className='space-y-4'>
                 <Input
@@ -142,7 +145,12 @@ export default function DashboardPage() {
                     </SelectContent>
                   </SelectContent>
                 </Select>
-                <Button onClick={handleAddService}>Submit</Button>
+                <Button
+                  className='bg-green-600 text-white text-md'
+                  onClick={handleAddService}
+                >
+                  Submit
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -151,7 +159,10 @@ export default function DashboardPage() {
         <section className='grid gap-4'>
           {services.length > 0 ? (
             services.map((svc) => (
-              <Card key={svc.id} className='p-4 '>
+              <Card
+                key={svc.id}
+                className='p-4 bg-[#212937] text-white border-0'
+              >
                 <CardContent className='flex justify-between w-full items-center gap-4 p-0'>
                   <div>
                     <p className='font-medium'>{svc.service_name}</p>
@@ -163,7 +174,7 @@ export default function DashboardPage() {
                       onValueChange={(val) => handleStatusChange(svc.id, val)}
                     >
                       <SelectTrigger
-                        className={`w-full border-2 border-gray-400 font-bold text-white ${
+                        className={`w-full border-0 text-md font-bold text-white ${
                           statusCodeToColor(svc.status_code) || 'bg-slate-700'
                         }`}
                       >
@@ -174,7 +185,7 @@ export default function DashboardPage() {
                         />
                       </SelectTrigger>
 
-                      <SelectContent className='bg-slate-800 text-white'>
+                      <SelectContent className='border-1 bg-[#212937] text-white p-2'>
                         {statusOptions.map((option) => (
                           <SelectItem
                             key={option.id}

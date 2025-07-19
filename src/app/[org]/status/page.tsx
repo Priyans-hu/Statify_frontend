@@ -6,15 +6,16 @@ import { useDispatch } from 'react-redux';
 import { setLoading } from '@/features/loading/loadingSlice';
 
 import Config from '@/constants/config';
-import { statusCodeToString, statusColorMap } from '@/lib/StatusUtils';
+import { useStatusOptions } from '@/hooks/useStatusOptions';
 
 import ServiceCard from '@/components/serviceCard';
 import IncidentTimeline from '@/components/IndicatorTimeline';
 
 type Service = {
   id: number;
-  name: string;
+  service_name: string;
   status_code: number;
+  status: String;
 };
 
 const incidents = [
@@ -29,6 +30,7 @@ export default function StatusPage({ params }: { params: { org: string } }) {
   const org = params.org;
   const dispatch = useDispatch();
   const [services, setServices] = useState<Service[]>([]);
+  const { statusCodeToColor, statusCodeToString } = useStatusOptions();
 
   useEffect(() => {
     dispatch(setLoading(false));
@@ -55,9 +57,9 @@ export default function StatusPage({ params }: { params: { org: string } }) {
         {services.map((svc) => (
           <ServiceCard
             key={svc.id}
-            name={svc.name}
-            status={statusCodeToString(svc.status_code, [])} // placeholder if you're not passing options
-            bgClass={statusColorMap[svc.status_code] || 'bg-slate-700'}
+            name={svc.service_name}
+            status={statusCodeToString(svc.status_code)}
+            bgClass={statusCodeToColor(svc.status_code) || 'bg-slate-700'}
           />
         ))}
       </section>

@@ -1,12 +1,14 @@
 import './globals.css';
 import Header from '@/components/header';
 import LoadingWrapper from '@/components/loadingWrapper';
-import { Inter } from 'next/font/google';
 import { Providers } from './providers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Roboto } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const roboto = Roboto({
+  subsets: ['latin'],
+});
 
 export const metadata = {
   title: 'Status App',
@@ -20,12 +22,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className={inter.className}>
+      <body className={`${roboto.className} bg-[#131a26] text-white`}>
         <Providers>
           <Header />
           <LoadingWrapper>{children}</LoadingWrapper>
         </Providers>
-        <ToastContainer/>
+        <ToastContainer />
       </body>
     </html>
   );
