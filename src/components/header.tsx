@@ -8,11 +8,13 @@ import { useDispatch } from 'react-redux';
 import AuthModal from './authModal';
 import { getLoggedInUser, logout } from '@/lib/utils';
 import { UserOutlined } from '@ant-design/icons';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const dispatch = useDispatch();
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
   const org = params?.org as string | undefined;
 
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -51,42 +53,41 @@ export default function Header() {
         visible={showAuthModal}
         onClose={() => setShowAuthModal(false)}
       />
-      <nav className='p-4 flex justify-between items-center shadow border-b !text-white'>
-        <div className='flex gap-6'>
+      <nav className="p-4 flex justify-between items-center !text-white">
+        <div className="flex gap-6">
           <Button
-            type='text'
-            onClick={() => handleClick('/')}
-            className='!text-white'
-          >
-            {org && formatOrgName(org)}
-          </Button>
-          <Button
-            type='text'
+            type="text"
             onClick={() => handleClick('/status')}
-            className='!text-white'
+            className="!text-white !text-lg !font-semibold"
           >
-            Status
+            Statify {org && ' | ' + formatOrgName(org)}
           </Button>
-          <Button
-            type='text'
-            onClick={() => handleClick('/dashboard')}
-            className='!text-white'
-          >
-            Dashboard
-          </Button>
+          {!pathname?.endsWith('/dashboard') && (
+            <Button
+              type="text"
+              onClick={() => handleClick('/dashboard')}
+              className="!text-white !text-lg !font-semibold"
+            >
+              Dashboard
+            </Button>
+          )}
         </div>
 
         <div>
           {!isLoggedIn ? (
             <Button
-              type='text'
+              type="text"
               onClick={() => setShowAuthModal(true)}
-              className='!text-white'
+              className="!text-white !text-lg !font-semibold"
             >
               Login / Register
             </Button>
           ) : (
-            <Button type='text' onClick={handleLogout} className='!text-white'>
+            <Button
+              type="text"
+              onClick={handleLogout}
+              className="!text-white !text-lg !font-semibold"
+            >
               <UserOutlined /> Logout
             </Button>
           )}

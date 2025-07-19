@@ -112,31 +112,31 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
 
   return (
     <Spin spinning={currentLoading}>
-      <main className='max-w-4xl mx-auto p-6 space-y-6 min-h-screen'>
-        <div className='flex justify-between items-center '>
-          <h1 className='text-2xl font-semibold'>Admin Dashboard</h1>
+      <main className="max-w-4xl mx-auto p-6 space-y-6 min-h-screen">
+        <div className="flex justify-between items-center ">
+          <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
           <Dialog>
             <DialogTrigger asChild>
-              <Button className='bg-[#212937] !text-white'>Add Service</Button>
+              <Button className="bg-[#212937] !text-white">Add Service</Button>
             </DialogTrigger>
-            <DialogContent className='bg-[#212937] border-0'>
+            <DialogContent className="bg-[#212937] border-0">
               <DialogHeader>
-                <DialogTitle className='text-center'>
+                <DialogTitle className="text-center">
                   Add New Service
                 </DialogTitle>
               </DialogHeader>
-              <div className='space-y-4'>
+              <div className="space-y-4">
                 <Input
-                  placeholder='Service Name'
+                  placeholder="Service Name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
                 <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className='w-full'>
-                    <SelectValue placeholder='Status' />
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Status" />
                   </SelectTrigger>
-                  <SelectContent className='bg-slate-800 text-white'>
-                    <SelectContent className='bg-slate-800 text-white'>
+                  <SelectContent className="bg-slate-800 text-white">
+                    <SelectContent className="bg-slate-800 text-white">
                       {statusOptions.map((option) => (
                         <SelectItem key={option.id} value={option.id}>
                           {option.status}
@@ -146,7 +146,7 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
                   </SelectContent>
                 </Select>
                 <Button
-                  className='bg-green-600 text-white text-md'
+                  className="bg-green-600 text-white text-md"
                   onClick={handleAddService}
                 >
                   Submit
@@ -156,19 +156,19 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
           </Dialog>
         </div>
 
-        <section className='grid gap-4'>
+        <section className="grid gap-4">
           {services.length > 0 ? (
             services.map((svc) => (
               <Card
                 key={svc.id}
-                className='p-4 bg-[#212937] text-white border-0'
+                className="p-4 bg-[#212937] text-white border-0"
               >
-                <CardContent className='flex justify-between w-full items-center gap-4 p-0'>
+                <CardContent className="flex justify-between w-full items-center gap-4 p-0">
                   <div>
-                    <p className='font-medium'>{svc.service_name}</p>
-                    <p className='text-sm text-gray-400'>ID: {svc.id}</p>
+                    <p className="font-medium">{svc.service_name}</p>
+                    <p className="text-sm text-gray-400">ID: {svc.id}</p>
                   </div>
-                  <div className='flex items-center gap-2'>
+                  <div className="flex items-center gap-2">
                     <Select
                       value={String(svc.status_code)} // Assuming id is number, value should be string
                       onValueChange={(val) => handleStatusChange(svc.id, val)}
@@ -185,12 +185,12 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
                         />
                       </SelectTrigger>
 
-                      <SelectContent className='border-1 bg-[#212937] text-white p-2'>
+                      <SelectContent className="border-1 bg-[#212937] text-white p-2">
                         {statusOptions.map((option) => (
                           <SelectItem
                             key={option.id}
                             value={String(option.id)}
-                            className='font-medium'
+                            className="font-medium"
                           >
                             {option.status}
                           </SelectItem>
@@ -202,7 +202,7 @@ export default function DashboardPage({ params }: { params: { org: string } }) {
               </Card>
             ))
           ) : (
-            <p className='mt-4 text-center text-sm text-muted-foreground'>
+            <p className="mt-4 text-center text-sm text-muted-foreground">
               No services available at the moment. Please Start by adding a new
               Service.
             </p>
