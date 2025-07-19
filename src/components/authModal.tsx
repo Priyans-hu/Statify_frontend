@@ -34,19 +34,17 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         data: values,
       };
       const res = await axios(config);
-      console.log(res);
       if (res.status === 200 && res.data.data.access_token) {
         onClose();
-        console.log('Login successful');
         toast.success('Login successful');
         setItem('token', res.data.data.access_token);
         dispatch(setLoading(true));
         window.location.reload();
       } else {
-        console.error('Login failed');
+        toast.error('Login failed');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      toast.error('Login error:');
     } finally {
       setCurrentLoading(false);
     }
@@ -66,17 +64,15 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         data: values,
       };
       const res = await axios(config);
-      console.log(res);
       if (res.status === 200) {
-        console.log('Registered successful');
         toast.success('Registered successfully, you can login now');
         setIsLogin(true);
         form.resetFields();
       } else {
-        console.error('Registered failed');
+        toast.error('Registration failed');
       }
     } catch (error) {
-      console.error('Registered error:', error);
+      toast.error('Registration error');
     } finally {
       setCurrentLoading(false);
     }
