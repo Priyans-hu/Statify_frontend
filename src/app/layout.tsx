@@ -5,6 +5,7 @@ import { Providers } from './providers';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Roboto } from 'next/font/google';
+import RouteGuardWrapper from './routeGuardWrapper';
 
 const roboto = Roboto({
   subsets: ['latin'],
@@ -25,7 +26,11 @@ export default function RootLayout({
       <body className={`${roboto.className} bg-[#131a26] text-white`}>
         <Providers>
           <Header />
-          <LoadingWrapper>{children}</LoadingWrapper>
+          <LoadingWrapper>
+            <RouteGuardWrapper>
+              {children}
+            </RouteGuardWrapper>
+          </LoadingWrapper>
         </Providers>
         <ToastContainer />
       </body>
