@@ -21,17 +21,10 @@ export default function Home() {
   }, [dispatch]);
 
   useEffect(() => {
-    const cached = sessionStorage.getItem('organizations');
-    if (cached) {
-      setOrganizations(JSON.parse(cached));
-      return;
-    }
-
     const fetchOrganizations = async () => {
       try {
         const response = await api.get('/organizations');
         setOrganizations(response.data as Organization[]);
-        sessionStorage.setItem('organizations', JSON.stringify(response.data));
       } catch (err: any) {
         console.error('Failed to fetch organizations', err);
         toast.error(err.response?.data?.message || 'Failed to fetch organizations');
@@ -60,8 +53,8 @@ export default function Home() {
             className="min-w-[250px]"
             onSelect={handleSelect}
             filterOption={(input, option) =>
-              typeof option?.children === 'string' &&
-              option.children.toLowerCase().includes(input.toLowerCase())
+              typeof option?.label === 'string' &&
+              option.label.toLowerCase().includes(input.toLowerCase())
             }
           >
             {organizations.map((org) => (
