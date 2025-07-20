@@ -1,5 +1,9 @@
 /* styles/globals.css or styles/antd-overrides.css */
 
+* {
+  color: white !important;
+}
+
 .ant-modal-wrap dialog {
   padding: 0 !important;
 }
