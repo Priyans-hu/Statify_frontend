@@ -11,6 +11,6 @@ export default function RouteGuard({ children }) {
     if (!user) {
       router.replace('/');
     }
-  }, []);
+  }, [router]);
   return children;
 }

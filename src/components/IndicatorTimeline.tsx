@@ -90,7 +90,7 @@ export default function IncidentTimeline({ incidents }: Props) {
           )}
 
           {selectedIncident?.updates.length ? (
-            <Timeline className="my-3 ">
+            <Timeline className="my-3">
               {selectedIncident.updates.map((update) => (
                 <Timeline.Item key={update.id} className="text-white">
                   <p className="font-medium">

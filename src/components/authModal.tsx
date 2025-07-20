@@ -21,7 +21,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
   const [currentLoading, setCurrentLoading] = useState(false);
 
   const handleLogin = async (values: any) => {
-    console.log('Logging in with', values);
     setCurrentLoading(true);
     try {
       const config = {
@@ -43,7 +42,7 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.error('Login failed');
       }
     } catch (error) {
-      toast.error('Login error:');
+      toast.error(`Login error: + ${error}`);
     } finally {
       setCurrentLoading(false);
     }

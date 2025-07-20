@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/features/loading/loadingSlice';
@@ -28,33 +28,32 @@ export default function StatusPage() {
   const dispatch = useDispatch();
   const [services, setServices] = useState<Service[]>([]);
   const { statusCodeToColor, statusCodeToString } = useStatusOptions();
-  const [incidents, setIncidents] = useState<any[]>([]);
-  
+  const [incidents, setIncidents] = useState<any[]>([]);  
+
+  const fetchServices = useCallback(async () => {
+    try {
+      const res = await axios.get(`${Config.API_BASE_URL}/services?org=${org}`);
+      setServices(res.data);
+    } catch (err) {
+      console.error('Failed to load services:', err);
+    }
+  }, [org]);
+
+  const fetchIncidents = useCallback(async () => {
+    try {
+      const res = await axios.get(`${Config.API_BASE_URL}/incidents/active?org=${org}`);
+      setIncidents(res?.data?.incidents || []);
+    } catch (err) {
+      console.error('Failed to load incidents:', err);
+    }
+  }, [org]);
+
   useEffect(() => {
     dispatch(setLoading(false));
-
-    const fetchServices = async () => {
-      try {
-        const res = await axios.get(`${Config.API_BASE_URL}/services?org=${org}`);
-        setServices(res.data);
-      } catch (err) {
-        console.error('Failed to load services:', err);
-      }
-    };
-
-    const fetchIncidents = async () => {
-      try {
-        const res = await axios.get(`${Config.API_BASE_URL}/incidents/active?org=${org}`);
-        setIncidents(res?.data?.incidents || []);
-      } catch (err) {
-        console.error('Failed to load incidents:', err);
-      }
-    };
-    
     connectWebSocket(org, handleIncomingMessage);
     fetchServices();
     fetchIncidents();
-  }, []);
+  }, [fetchIncidents, fetchServices, dispatch, org]);
 
   const handleIncomingMessage = (recievedData: {
     data: any; type: any; 
