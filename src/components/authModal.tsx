@@ -41,8 +41,8 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.error('Login failed');
       }
     } catch (error) {
-        console.error(error);
-        toast.error(`Login error`);
+      console.error(error);
+      toast.error(`Login error`);
     } finally {
       setCurrentLoading(false);
     }
@@ -70,8 +70,8 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.error(' failed');
       }
     } catch (error) {
-        console.error(error);
-        toast.error(`Registration error`);    
+      console.error(error);
+      toast.error(`Registration error`);
     } finally {
       setCurrentLoading(false);
     }
@@ -84,90 +84,89 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
 
   return (
     <>
-
-    <Modal
+      <Modal
         open={visible}
         title={isLogin ? 'Login' : 'Register'}
         onCancel={onClose}
         footer={null}
         className="authModal"
-    >
-         {currentLoading && (
-        <div className="fixed inset-0 bg-[rgba(255,255,255,0.2)] z-50 flex items-center justify-center">
+      >
+        {currentLoading && (
+          <div className="fixed inset-0 bg-[rgba(255,255,255,0.2)] z-50 flex items-center justify-center">
             <Spin size="large" />
-        </div>
+          </div>
         )}
         <Form form={form} layout="vertical" onFinish={isLogin ? handleLogin : handleRegister}>
-        {!isLogin && (
+          {!isLogin && (
             <>
-            <Form.Item
+              <Form.Item
                 label="Username"
                 name="username"
                 rules={[{ required: true, message: 'Please enter your username' }]}
-            >
+              >
                 <Input />
-            </Form.Item>
-            <Form.Item label="Email" name="email">
+              </Form.Item>
+              <Form.Item label="Email" name="email">
                 <Input type="email" placeholder="Optional" />
-            </Form.Item>
-            <Form.Item
+              </Form.Item>
+              <Form.Item
                 label="Password"
                 name="password"
                 rules={[{ required: true, message: 'Please enter your password' }]}
-            >
+              >
                 <Input.Password />
-            </Form.Item>
-            <Form.Item
+              </Form.Item>
+              <Form.Item
                 label="Organisation ID"
                 name="org_id"
                 rules={[{ required: true, message: 'Please enter organisation ID' }]}
-            >
+              >
                 <Input />
-            </Form.Item>
-            <Form.Item
+              </Form.Item>
+              <Form.Item
                 label="Role"
                 name="role"
                 rules={[{ required: true, message: 'Please select a role' }]}
-            >
+              >
                 <Select placeholder="Select a role">
-                <Option value="admin">Admin</Option>
-                <Option value="viewer">Viewer</Option>
+                  <Option value="admin">Admin</Option>
+                  <Option value="viewer">Viewer</Option>
                 </Select>
-            </Form.Item>
+              </Form.Item>
             </>
-        )}
-        {isLogin && (
+          )}
+          {isLogin && (
             <>
-            <Form.Item
+              <Form.Item
                 label="Username"
                 name="username"
                 rules={[{ required: true, message: 'Please enter your username' }]}
-            >
+              >
                 <Input />
-            </Form.Item>
-            <Form.Item
+              </Form.Item>
+              <Form.Item
                 label="Password"
                 name="password"
                 rules={[{ required: true, message: 'Please enter your password' }]}
-            >
+              >
                 <Input.Password />
-            </Form.Item>
+              </Form.Item>
             </>
-        )}
+          )}
 
-        <Form.Item>
+          <Form.Item>
             <Button type="primary" htmlType="submit" block>
-            {isLogin ? 'Login' : 'Register'}
+              {isLogin ? 'Login' : 'Register'}
             </Button>
-        </Form.Item>
+          </Form.Item>
         </Form>
 
         <div className="text-center mt-2">
-        <Button type="link" onClick={toggleForm}>
+          <Button type="link" onClick={toggleForm}>
             {isLogin ? 'New user? Register' : 'Already registered? Login'}
-        </Button>
+          </Button>
         </div>
-    </Modal>
+      </Modal>
     </>
   );
 }

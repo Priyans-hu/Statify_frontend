@@ -41,16 +41,16 @@ export default function Header() {
 
   useEffect(() => {
     const user = getLoggedInUser();
-    if(user || (loggedIn && user)) {
-      if(!loggedInUser){
+    if (user || (loggedIn && user)) {
+      if (!loggedInUser) {
         setLoggedInUser(user);
       }
-      if(!loggedIn){
+      if (!loggedIn) {
         dispatch(setLoggedIn(true));
       }
-    }else {
+    } else {
       setLoggedInUser(null);
-      if(loggedIn) {
+      if (loggedIn) {
         dispatch(setLoggedIn(false));
       }
     }
@@ -70,8 +70,10 @@ export default function Header() {
   const items: MenuProps['items'] = [
     {
       key: 'user',
-      label: `Signed In As ${loggedInUser?.username || ""}`,
-      onClick: () => {toast.info(`Hello ` + (loggedInUser?.username || 'User'))},
+      label: `Signed In As ${loggedInUser?.username || ''}`,
+      onClick: () => {
+        toast.info(`Hello ` + (loggedInUser?.username || 'User'));
+      },
     },
     {
       key: 'logout',
@@ -83,7 +85,7 @@ export default function Header() {
   return (
     <>
       <AuthModal visible={showAuthModal} onClose={() => setShowAuthModal(false)} />
-    <nav className="fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center !text-white">
+      <nav className="fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center !text-white">
         <div className="flex gap-6">
           <Button
             type="text"
@@ -113,16 +115,16 @@ export default function Header() {
               Login / Register
             </Button>
           ) : (
-           <Dropdown menu={{ items }} trigger={['click']}>
-            <Button
-              type="text"
-              className="!text-white !text-lg !font-semibold capitalize flex items-center gap-2"
-            >
+            <Dropdown menu={{ items }} trigger={['click']}>
+              <Button
+                type="text"
+                className="!text-white !text-lg !font-semibold capitalize flex items-center gap-2"
+              >
                 <UserOutlined />
                 {loggedInUser?.role || 'viewer'}
                 <DownOutlined />
-            </Button>
-          </Dropdown>
+              </Button>
+            </Dropdown>
           )}
         </div>
       </nav>

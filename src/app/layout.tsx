@@ -24,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <Header />
           <LoadingWrapper>
-            <RouteGuardWrapper><div className="pt-20">{children}</div></RouteGuardWrapper>
+            <RouteGuardWrapper>
+              <div className="pt-20">{children}</div>
+            </RouteGuardWrapper>
           </LoadingWrapper>
         </Providers>
         <ToastContainer />
