@@ -71,7 +71,6 @@ export function getLoggedInUser(): User | null {
 
 export function logout(): void {
   clearItem('token');
-  window.location.reload();
 }
 
 export function decodeToken<T extends object = DefaultPayload>(token: string): T | null {
