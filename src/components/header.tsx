@@ -112,7 +112,7 @@ export default function Header() {
           )}
         </div>
 
-        <div>
+        {pathname !== "/" && (<div>
           {!loggedInUser ? (
             <Button
               type="text"
@@ -133,7 +133,7 @@ export default function Header() {
               </Button>
             </Dropdown>
           )}
-        </div>
+        </div>)}
       </nav>
     </>
   );
