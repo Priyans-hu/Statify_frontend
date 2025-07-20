@@ -7,6 +7,8 @@ type User = {
   role: string;
   org_id: string;
   username: string;
+  org_slug: string;
+  iat: number; // UNIX timestamp
   exp: number; // UNIX timestamp
 };
 
@@ -70,6 +72,16 @@ export function getLoggedInUser(): User | null {
 
   return user;
 }
+
+/**
+ * Check if the current user is an admin for the given organization.
+ */
+export const isAdminForCurrentOrg = (org: string | string[] | undefined): boolean => {
+  if (!org || Array.isArray(org)) return false;
+
+  const user = getLoggedInUser();
+  return user?.role === 'admin' && user?.org_slug === org;
+};
 
 export function logout(): void {
   clearItem('token');
