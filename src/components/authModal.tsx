@@ -3,13 +3,12 @@ import Config from '@/constants/config';
 import { setLoading } from '@/features/loading/loadingSlice';
 import { useParams } from 'next/navigation';
 import { setItem } from '@/lib/utils';
-import { Modal, Tabs, Form, Input, Button, Select, Spin, notification } from 'antd';
+import { Modal, Form, Input, Button, Select, Spin } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
-const { TabPane } = Tabs;
 const { Option } = Select;
 
 export default function AuthModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
@@ -22,7 +21,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
   const [currentLoading, setCurrentLoading] = useState(false);
 
   const handleLogin = async (values: any) => {
-    console.log('Logging in with', values);
     setCurrentLoading(true);
     try {
       const config = {
@@ -44,7 +42,7 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.error('Login failed');
       }
     } catch (error) {
-      toast.error('Login error:');
+      toast.error(`Login error: + ${error}`);
     } finally {
       setCurrentLoading(false);
     }

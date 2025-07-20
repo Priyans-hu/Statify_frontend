@@ -12,5 +12,6 @@ module.exports = {
     'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
     'react/react-in-jsx-scope': 'off',
     'no-unused-imports': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
   },
 };

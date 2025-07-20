@@ -1,13 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { useEffect, useState, useCallback } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -39,12 +33,7 @@ export default function DashboardPage() {
   const [currentLoading, setCurrentLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    dispatch(setLoading(false));
-    fetchServices();
-  }, []);
-
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     setCurrentLoading(true);
     try {
       const config = {
@@ -64,7 +53,12 @@ export default function DashboardPage() {
     } finally {
       setCurrentLoading(false);
     }
-  };
+  }, [org]);
+
+  useEffect(() => {
+    dispatch(setLoading(false));
+    fetchServices();
+  }, [dispatch, fetchServices]);
 
   const handleAddService = async () => {
     if (!name || !status) {

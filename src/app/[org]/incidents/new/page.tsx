@@ -47,7 +47,7 @@ export default function NewIncidentPage() {
     };
 
     fetchServices();
-  }, []);
+  }, [org]);
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

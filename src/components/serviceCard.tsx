@@ -5,6 +5,7 @@ import { useStatusOptions } from '@/hooks/useStatusOptions';
 type Props = {
   name: string;
   status: string; // 'operational', 'degraded', etc
+  bgClass: String;
 };
 
 export default function ServiceCard({ name, status }: Props) {

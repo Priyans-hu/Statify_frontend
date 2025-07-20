@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
 import { Button, Modal, Input, Select, Tag, message } from 'antd';
@@ -36,7 +36,7 @@ export default function IncidentsPage() {
   const [updateText, setUpdateText] = useState('');
   const [newStatus, setNewStatus] = useState<string>(''); // for status update
 
-  const fetchIncidents = async () => {
+  const fetchIncidents = useCallback(async () => {
     try {
       const res = await api.get(`${Config.API_BASE_URL}/incidents/active`, {
         params: { org },
@@ -45,11 +45,11 @@ export default function IncidentsPage() {
     } catch (err) {
       console.error('Failed to fetch incidents:', err);
     }
-  };
+  }, [org]);
 
   useEffect(() => {
     fetchIncidents();
-  }, []);
+  }, [fetchIncidents]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
