@@ -1,14 +1,14 @@
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from '@/components/ui/card';
 
 type Incident = {
-  title: string
-  description: string
-  time: string
-}
+  title: string;
+  description: string;
+  time: string;
+};
 
 type Props = {
-  incidents: Incident[]
-}
+  incidents: Incident[];
+};
 
 export default function IncidentTimeline({ incidents }: Props) {
   return (
@@ -23,5 +23,5 @@ export default function IncidentTimeline({ incidents }: Props) {
         </Card>
       ))}
     </div>
-  )
+  );
 }

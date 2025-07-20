@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -124,4 +124,11 @@
 .ant-form-item {
   position: sticky;
   margin-bottom: 10px !important;
+}
+
+button svg {
+  height: 100% !important;
+  font-weight: 900 !important;
+  color: white !important;
+  stroke-width: 0.25rem !important;
 }

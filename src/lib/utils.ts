@@ -1,11 +1,10 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { jwtDecode, JwtPayload as DefaultPayload } from "jwt-decode";
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { jwtDecode, JwtPayload as DefaultPayload } from 'jwt-decode';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
-
 
 // LocalStorage Utilities
 
@@ -64,7 +63,6 @@ export function logout(): void {
   clearItem('token');
   window.location.reload();
 }
-
 
 export function decodeToken<T extends object = DefaultPayload>(token: string): T | null {
   try {

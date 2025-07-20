@@ -15,7 +15,7 @@ type Service = {
   id: number;
   service_name: string;
   status_code: number;
-  status: String;
+  status: string;
 };
 
 export default function StatusPage({ params }: { params: { org: string } }) {
@@ -30,9 +30,7 @@ export default function StatusPage({ params }: { params: { org: string } }) {
 
     const fetchServices = async () => {
       try {
-        const res = await axios.get(
-          `${Config.API_BASE_URL}/services?org=${org}`
-        );
+        const res = await axios.get(`${Config.API_BASE_URL}/services?org=${org}`);
         setServices(res.data);
       } catch (err) {
         console.error('Failed to load services:', err);
@@ -55,10 +53,10 @@ export default function StatusPage({ params }: { params: { org: string } }) {
   }, []);
 
   return (
-    <main className='max-w-3xl mx-auto p-6 space-y-6'>
-      <h1 className='text-2xl font-semibold'>Service Status</h1>
+    <main className="max-w-3xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-semibold">Service Status</h1>
 
-      <section className='space-y-3'>
+      <section className="space-y-3">
         {services.map((svc) => (
           <ServiceCard
             key={svc.id}
@@ -70,7 +68,7 @@ export default function StatusPage({ params }: { params: { org: string } }) {
       </section>
 
       <section>
-        <h2 className='text-xl font-medium mb-2'>Active Incidents</h2>
+        <h2 className="text-xl font-medium mb-2">Active Incidents</h2>
         <IncidentTimeline incidents={incidents} />
       </section>
     </main>

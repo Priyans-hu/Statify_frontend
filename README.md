@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔧 StatusPage Frontend
 
-## Getting Started
+A sleek, multi-tenant status page frontend built with **Next.js (App Router)** and **TypeScript**. Designed for SaaS-style service monitoring with organization-specific dashboards and public status pages.
 
-First, run the development server:
+<br/>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Features
+
+- ✅ **Dynamic Routing** — `/[org]/dashboard`, `/[org]/status`, etc.
+- 🔐 **Auth Modal** — Login/Register with token-based flow
+- 🌐 **Public Status Page** — Show real-time service status for any org
+- 🧭 **Dashboard** — Add/edit services, monitor incidents
+- 🧩 **Reusable Components** — Cards, Badges, Modals, Hooks
+- 🎨 **Dark-Slate Themed UI** — Clean, modern aesthetics using Tailwind + Ant Design
+- 🌍 **Multi-Org Support** — Each org has isolated context (like `/netflix`, `/openai`, etc.)
+
+<br/>
+
+## 🧱 Tech Stack
+
+| Layer         | Tech                                               |
+| ------------- | -------------------------------------------------- |
+| **Framework** | [Next.js 14 (App Router)](https://nextjs.org/docs) |
+| **Lang**      | TypeScript                                         |
+| **UI Kit**    | TailwindCSS + shadcn-ui + Ant Design               |
+| **State**     | Redux Toolkit                                      |
+| **API Calls** | Axios                                              |
+| **Routing**   | Dynamic Segments via App Router                    |
+
+<br/>
+
+## 🗂 Folder Structure
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+src/
+│
+├── app/ # Next.js app routes
+│ ├── \[org]/dashboard/
+│ └── \[org]/status/
+│
+├── components/ # Shared UI components
+├── features/ # Redux slices
+├── hooks/ # Custom hooks (e.g. statusColor logic)
+├── lib/ # Utils (auth, token handling)
+├── constants/ # Config vars
+└── styles/ # Global styles
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<br/>
 
-## Learn More
+## ⚙️ Setup
 
-To learn more about Next.js, take a look at the following resources:
+1. **Clone the repo**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   git clone https://github.com/your-org/statuspage-frontend.git
+   cd statuspage-frontend
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install dependencies**
 
-## Deploy on Vercel
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Configure environment**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   Create `.env.local`:
+
+   ```env
+   NEXT_PUBLIC_API_BASE_URL=https://your-backend-api.com/api
+   ```
+
+4. **Run the dev server**
+
+   ```bash
+   npm run dev
+   ```
+
+App will run at: `http://localhost:3000/[org]/dashboard`
+
+<br/>
+
+## ✨ Usage Example
+
+Open `http://localhost:3000/google/dashboard` to manage Netflix services.
+
+```ts
+router.push(`/${org}/dashboard`);
+```
+
+Use `useParams()` to extract `org` from URL:
+
+```ts
+const { org } = useParams();
+```
+
+Use `useStatusOptions()` hook to get status color and label:
+
+```ts
+const { statusCodeToColor, statusCodeToString } = useStatusOptions();
+```
+
+<br/>
+
+## 📦 Deployment
+
+Supports deployment on Vercel, Render, or any platform supporting Next.js App Router.
+
+```bash
+npm run build
+npm start
+```
+
+Make sure your `.env` is properly configured in the production environment.
