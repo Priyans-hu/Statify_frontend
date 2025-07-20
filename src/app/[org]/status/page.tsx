@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/features/loading/loadingSlice';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Config from '@/constants/config';
 import { useStatusOptions } from '@/hooks/useStatusOptions';
 
@@ -18,6 +18,7 @@ import { Service } from '@/types/service';
 
 export default function StatusPage() {
   const params = useParams();
+  const router = useRouter();
   const org = params.org;
   const dispatch = useDispatch();
   const [services, setServices] = useState<Service[]>([]);
@@ -107,7 +108,15 @@ export default function StatusPage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-medium mb-2">Active Incidents</h2>
+        <div className="flex justify-between items-center ">
+          <h2 className="text-xl font-medium mb-2">Active Incidents</h2>
+          <h2
+            onClick={() => router.push(`/${org}/incidents/all`)}
+            className="text-xl font-medium mb-2 underline cursor-pointer"
+          >
+            View all past incidents
+          </h2>
+        </div>
         {incidents.length > 0 ? (
           <IncidentTimeline incidents={incidents} />
         ) : (

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Modal, Input, Select, message } from 'antd';
+import { Checkbox } from '@/components/ui/checkbox';
 import api from '@/lib/api';
 import Config from '@/constants/config';
 import IncidentCard from '@/components/incidentCard';
@@ -12,11 +13,14 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 import { Incident } from '@/types/incident';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '@/features/loading/loadingSlice';
 
 export default function IncidentsPage() {
   const { org } = useParams();
   const router = useRouter();
   const user = getLoggedInUser();
+  const dispatch = useDispatch();
   const userRole = user?.role || 'viewer';
 
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -24,15 +28,19 @@ export default function IncidentsPage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [updateText, setUpdateText] = useState('');
   const [newStatus, setNewStatus] = useState<string>('');
+  const [resolved, setResolved] = useState(false);
 
   const fetchIncidents = useCallback(async () => {
     try {
+      dispatch(setLoading(true));
       const res = await api.get(`${Config.API_BASE_URL}/incidents/active`, {
         params: { org },
       });
       setIncidents(res.data.incidents);
     } catch (err) {
       console.error('Failed to fetch incidents:', err);
+    } finally {
+      dispatch(setLoading(false));
     }
   }, [org]);
 
@@ -55,6 +63,7 @@ export default function IncidentsPage() {
         incident_id: selectedIncident.id,
         status: newStatus,
         description: updateText || undefined,
+        resolved_at: resolved ? Date.now() : undefined,
       });
 
       message.success('Incident updated');
@@ -109,7 +118,6 @@ export default function IncidentsPage() {
               </Option>
             ))}
           </Select>
-
           <label className="block text-sm text-gray-300 mt-4">Add Update (Optional)</label>
           <TextArea
             rows={3}
@@ -117,6 +125,19 @@ export default function IncidentsPage() {
             onChange={(e) => setUpdateText(e.target.value)}
             placeholder="Describe what changed or current situation..."
           />
+          <Checkbox
+            id="resolve-incident"
+            title="Resolve incident"
+            checked={resolved}
+            onCheckedChange={(checked) => {
+              if (checked !== 'indeterminate') {
+                setResolved(checked);
+              }
+            }}
+            className="text-white"
+          >
+            Resolve Incident
+          </Checkbox>
         </div>
       </Modal>
     </main>

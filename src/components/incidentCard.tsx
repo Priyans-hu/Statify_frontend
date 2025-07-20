@@ -127,22 +127,25 @@ export default function IncidentCard({ incident, onUpdate, userRole }: IncidentC
           )}
 
           {selectedIncident?.updates.length ? (
-            <Timeline
-              className="my-3"
-              items={selectedIncident.updates.map((update) => ({
-                key: update.id,
-                children: (
-                  <>
-                    <div className="text-white">
-                      <p className="font-medium">
-                        {dayjs(update.timestamp).format('MMM D, YYYY h:mm A')}
-                      </p>
-                      <p>{update.description}</p>
-                    </div>
-                  </>
-                ),
-              }))}
-            />
+            <div className="space-y-2 my-4">
+              <div className="font-semibold text-xl my-6">Update Timeline:</div>
+              <Timeline
+                className="my-3"
+                items={selectedIncident.updates.map((update) => ({
+                  key: update.id,
+                  children: (
+                    <>
+                      <div className="text-white">
+                        <p className="font-medium">
+                          {dayjs(update.timestamp).format('MMM D, YYYY h:mm A')}
+                        </p>
+                        <p>{update.description}</p>
+                      </div>
+                    </>
+                  ),
+                }))}
+              />
+            </div>
           ) : (
             <div className="space-y-2 my-4">
               <div className="font-semibold text-xl">Incident Updates:</div>

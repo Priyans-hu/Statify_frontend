@@ -3,6 +3,7 @@ export type IncidentUpdate = {
   description: string;
   created_at: string;
   timestamp: string;
+  resolved_at?: string; // ISO date string
 };
 
 export type Incident = {
