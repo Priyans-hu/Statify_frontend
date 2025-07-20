@@ -3,9 +3,10 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Button, Card, Tag } from 'antd';
+import { Button, Tag } from 'antd';
 import axios from 'axios';
 import Config from '@/constants/config';
+import { Card, CardContent } from '@/components/ui/card';
 
 type IncidentUpdate = {
   id: number;
@@ -19,7 +20,7 @@ type Incident = {
   status: string;
   description: string | null;
   started_at: string;
-  services: { name: string }[];
+  services: { service_name: string }[];
   updates: IncidentUpdate[];
 };
 
@@ -73,39 +74,40 @@ export default function IncidentsPage() {
         ) : (
           <div className="grid gap-4">
             {incidents.map((incident) => (
-              <Card
-                key={incident.id}
-                title={
-                  <div className="flex justify-between items-center">
-                    <span>{incident.title}</span>
-                    <Tag color={getStatusColor(incident.status)}>{incident.status}</Tag>
+              <Card key={incident.id} className="bg-[#212937] text-white border-0">
+                <CardContent>
+                  <div className="flex justify-between items-center my-2">
+                    <span className="text-lg font-semibold">{incident.title}</span>
+                    <Tag className="capitalize" color={getStatusColor(incident.status)}>
+                      {incident.status}
+                    </Tag>
                   </div>
-                }
-              >
-                <p className="text-sm text-gray-600 mb-2">{incident.description}</p>
-                <p className="text-sm text-gray-500 mb-2">
-                  Started at: {new Date(incident.started_at).toLocaleString()}
-                </p>
 
-                <div className="mb-2">
-                  <strong>Services Affected:</strong>{' '}
-                  {incident.services.map((s) => s.name).join(', ') || 'None'}
-                </div>
+                  <p className="text-sm text-gray-600 mb-2">{incident.description}</p>
+                  <p className="text-sm text-gray-500 mb-2">
+                    Started at: {new Date(incident.started_at).toLocaleString()}
+                  </p>
 
-                {incident.updates.length > 0 && (
-                  <div className="mt-2">
-                    <strong>Updates:</strong>
-                    <ul className="list-disc ml-6">
-                      {incident.updates.map((update) => (
-                        <li key={update.id}>
-                          <span className="text-sm text-gray-700">
-                            {new Date(update.created_at).toLocaleString()} - {update.description}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mb-2">
+                    <strong>Services Affected:</strong>{' '}
+                    {incident.services.map((s) => s.service_name).join(', ') || 'None'}
                   </div>
-                )}
+
+                  {incident.updates.length > 0 && (
+                    <div className="mt-2">
+                      <strong>Updates:</strong>
+                      <ul className="list-disc ml-6">
+                        {incident.updates.map((update) => (
+                          <li key={update.id}>
+                            <span className="text-sm text-gray-700">
+                              {new Date(update.created_at).toLocaleString()} - {update.description}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </CardContent>
               </Card>
             ))}
           </div>

@@ -69,7 +69,11 @@ export default function StatusPage() {
 
       <section>
         <h2 className="text-xl font-medium mb-2">Active Incidents</h2>
-        <IncidentTimeline incidents={incidents} />
+        {incidents.length > 0 ? (
+          <IncidentTimeline incidents={incidents} />
+        ) : (
+          <p className="text-gray-500">No active incidents found.</p>
+        )}
       </section>
     </main>
   );
