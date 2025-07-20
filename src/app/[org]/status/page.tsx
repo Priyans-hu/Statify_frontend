@@ -13,22 +13,17 @@ import ServiceCard from '@/components/serviceCard';
 import IncidentTimeline from '@/components/IndicatorTimeline';
 
 import { connectWebSocket } from '../../../lib/websocket';
+import SortServices, { Service } from '@/components/sortServices';
 import { toast } from 'react-toastify';
-
-type Service = {
-  id: number;
-  service_name: string;
-  status_code: number;
-  status: string;
-};
 
 export default function StatusPage() {
   const params = useParams();
   const org = params.org;
   const dispatch = useDispatch();
   const [services, setServices] = useState<Service[]>([]);
+  const [sortedServices, setSortedServices] = useState<Service[]>(services);
   const { statusCodeToColor, statusCodeToString } = useStatusOptions();
-  const [incidents, setIncidents] = useState<any[]>([]);  
+  const [incidents, setIncidents] = useState<any[]>([]);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -49,53 +44,57 @@ export default function StatusPage() {
   }, [org]);
 
   useEffect(() => {
-    dispatch(setLoading(false));
+    dispatch(setLoading(true));
     connectWebSocket(org, handleIncomingMessage);
     fetchServices();
     fetchIncidents();
+    dispatch(setLoading(false));
   }, [fetchIncidents, fetchServices, dispatch, org]);
 
-  const handleIncomingMessage = (recievedData: {
-    data: any; type: any; 
-}) => {
-      toast.info(`🔔 New update received!`);
-      if(recievedData && recievedData.data && recievedData.type){
-        const data = recievedData.data;
-        const objectType = recievedData.type as 'service' | 'incident';
-        const updateData = data[objectType];
-        const funcCall ={
-          service: setServices,
-          incident: setIncidents,
-        }
-        if(updateData){
-          funcCall[objectType]((prev: any[]) => {
-              const index = prev.findIndex((svc) => svc.id == updateData.id);
-              if (index !== -1) {
-                return prev.map((svc) =>
-                  svc.id == updateData.id ? { ...svc, ...updateData } : svc
-                );
-              } else {
-                return [...prev, updateData];
-              }
-            }
-          );
-        }
+  const handleIncomingMessage = (recievedData: { data: any; type: any }) => {
+    if (recievedData && recievedData.data && recievedData.type) {
+      const data = recievedData.data;
+      const objectType = recievedData.type as 'service' | 'incident';
+      const updateData = data[objectType];
+      const funcCall = {
+        service: setServices,
+        incident: setIncidents,
+      };
+      if (updateData) {
+        funcCall[objectType]((prev: any[]) => {
+          const index = prev.findIndex((svc) => svc.id == updateData.id);
+          if (index !== -1) {
+            return prev.map((svc) => (svc.id == updateData.id ? { ...svc, ...updateData } : svc));
+          } else {
+            return [...prev, updateData];
+          }
+        });
       }
+    }
   };
 
   return (
     <main className="max-w-3xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-semibold">Service Status</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-semibold">Service Status</h1>
+        <SortServices services={services} onSorted={setSortedServices} />
+      </div>
 
       <section className="space-y-3">
-        {services.map((svc) => (
-          <ServiceCard
-            key={svc.id}
-            name={svc.service_name}
-            status={statusCodeToString(svc.status_code)}
-            bgClass={statusCodeToColor(svc.status_code) || 'bg-slate-700'}
-          />
-        ))}
+        {services.length > 0 ? (
+          <>
+            {sortedServices.map((svc) => (
+              <ServiceCard
+                key={svc.id}
+                name={svc.service_name}
+                status={statusCodeToString(svc.status_code)}
+                bgClass={statusCodeToColor(svc.status_code) || 'bg-slate-700'}
+              />
+            ))}
+          </>
+        ) : (
+          <p className="text-gray-500">No services available at the moment.</p>
+        )}
       </section>
 
       <section>

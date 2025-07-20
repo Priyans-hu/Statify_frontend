@@ -90,16 +90,22 @@ export default function IncidentTimeline({ incidents }: Props) {
           )}
 
           {selectedIncident?.updates.length ? (
-            <Timeline className="my-3">
-              {selectedIncident.updates.map((update) => (
-                <Timeline.Item key={update.id} className="text-white">
-                  <p className="font-medium">
-                    {dayjs(update.created_at).format('MMM D, YYYY h:mm A')}
-                  </p>
-                  <p>{update.description}</p>
-                </Timeline.Item>
-              ))}
-            </Timeline>
+            <Timeline
+              className="my-3"
+              items={selectedIncident.updates.map((update) => ({
+                key: update.id,
+                children: (
+                  <>
+                    <div className="text-white">
+                      <p className="font-medium">
+                        {dayjs(update.created_at).format('MMM D, YYYY h:mm A')}
+                      </p>
+                      <p>{update.description}</p>
+                    </div>
+                  </>
+                ),
+              }))}
+            />
           ) : (
             <div className="space-y-2 my-4">
               <div className="font-semibold text-xl">Incident Updates:</div>
