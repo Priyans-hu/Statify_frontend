@@ -9,6 +9,7 @@ import AuthModal from './authModal';
 import { getLoggedInUser, logout } from '@/lib/utils';
 import { UserOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ export default function Header() {
   const params = useParams();
   const pathname = usePathname();
   const org = params?.org as string | undefined;
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,6 +30,17 @@ export default function Header() {
       router.push(path);
     }
   };
+
+  useEffect(() => {
+    const user = getLoggedInUser();
+    if (user && user.role) {
+      setUserRole(user.role);
+      setIsLoggedIn(true);
+    } else {
+      setUserRole(null);
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   const formatOrgName = (slug: string): string => {
     return slug
@@ -72,21 +85,31 @@ export default function Header() {
         </div>
 
         <div>
-          {!isLoggedIn ? (
+          {isLoggedIn ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="text"
+                  className="!text-white !text-lg !font-semibold flex items-center gap-2"
+                  onClick={handleLogout}
+                >
+                  <UserOutlined />
+                  Logout
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="center">
+                <p className="text-sm">
+                  Logged in as <strong>{userRole?.toUpperCase() || 'User'}</strong>
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
             <Button
               type="text"
               onClick={() => setShowAuthModal(true)}
               className="!text-white !text-lg !font-semibold"
             >
               Login / Register
-            </Button>
-          ) : (
-            <Button
-              type="text"
-              onClick={handleLogout}
-              className="!text-white !text-lg !font-semibold"
-            >
-              <UserOutlined /> Logout
             </Button>
           )}
         </div>
