@@ -4,20 +4,29 @@ import Config from '@/constants/config';
 
 type StatusOption = { id: number; status: string };
 
+let cachedStatusOptions: StatusOption[] | null = null;
+
 export const useStatusOptions = () => {
   const [statusOptions, setStatusOptions] = useState<StatusOption[]>([]);
 
   useEffect(() => {
-    const fetchStatusOptions = async () => {
-      try {
-        const res = await axios.get(`${Config.API_BASE_URL}/status`);
-        setStatusOptions(res.data);
-      } catch (error) {
-        console.error('Failed to load status options', error);
-      }
-    };
-    fetchStatusOptions();
+    if (cachedStatusOptions) {
+      setStatusOptions(cachedStatusOptions);
+    } else {
+      fetchStatusOptions();
+      console.log('calling, no cache present');
+    }
   }, []);
+
+  const fetchStatusOptions = async () => {
+    try {
+      const res = await axios.get(`${Config.API_BASE_URL}/status`);
+      setStatusOptions(res.data);
+      cachedStatusOptions = res.data;
+    } catch (error) {
+      console.error('Failed to load status options', error);
+    }
+  };
 
   const statusColorMap: Record<number, string> = {
     1: 'bg-green-600', // operational

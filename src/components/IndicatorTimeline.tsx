@@ -1,27 +1,24 @@
-import { Card, CardContent } from '@/components/ui/card';
+'use client';
 
-type Incident = {
-  title: string;
-  description: string;
-  time: string;
-};
+import IncidentCard from '@/components/incidentCard';
+import { Incident } from '@/types/incident';
+import { getLoggedInUser } from '@/lib/utils';
 
 type Props = {
   incidents: Incident[];
 };
 
 export default function IncidentTimeline({ incidents }: Props) {
+  const user = getLoggedInUser();
+  const userRole = user?.role || 'viewer';
+
   return (
-    <div className="space-y-4">
-      {incidents.map((incident, i) => (
-        <Card key={i}>
-          <CardContent className="p-4">
-            <h4 className="font-semibold">{incident.title}</h4>
-            <p className="text-sm text-gray-600">{incident.description}</p>
-            <p className="text-xs text-gray-400 mt-2">{incident.time}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <>
+      <div className="space-y-4">
+        {incidents.map((incident) => (
+          <IncidentCard key={incident.id} incident={incident} userRole={userRole} />
+        ))}
+      </div>
+    </>
   );
 }

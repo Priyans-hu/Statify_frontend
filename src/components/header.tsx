@@ -1,14 +1,16 @@
 'use client';
 
 import { setLoading } from '@/features/loading/loadingSlice';
-import { Button } from 'antd';
+import { Button, Dropdown, MenuProps, Tooltip } from 'antd';
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AuthModal from './authModal';
 import { getLoggedInUser, logout } from '@/lib/utils';
-import { UserOutlined } from '@ant-design/icons';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
+import { toast } from 'react-toastify';
+import { setLoggedIn } from '@/features/loggedIn/loggedInSlice';
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -16,16 +18,23 @@ export default function Header() {
   const params = useParams();
   const pathname = usePathname();
   const org = params?.org as string | undefined;
+  const loggedIn = useSelector((state: any) => state.loggedIn.loggedIn);
 
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<any | null>(null);
 
   const handleClick = (path: string) => {
     dispatch(setLoading(true));
     if (org) {
-      router.push(`/${org}${path}`);
+      const targetPath = `/${org}${path}`;
+      if (pathname !== targetPath) {
+        router.push(targetPath);
+      }
     } else {
-      router.push(path);
+      const targetPath = path;
+      if (pathname !== targetPath) {
+        router.push(targetPath);
+      }
     }
   };
 
@@ -37,20 +46,52 @@ export default function Header() {
   };
 
   useEffect(() => {
-    setIsLoggedIn(!!getLoggedInUser());
-  }, []);
+    const user = getLoggedInUser();
+    if (user || (loggedIn && user)) {
+      if (!loggedInUser) {
+        setLoggedInUser(user);
+      }
+      if (!loggedIn) {
+        dispatch(setLoggedIn(true));
+      }
+    } else {
+      setLoggedInUser(null);
+      if (loggedIn) {
+        dispatch(setLoggedIn(false));
+      }
+    }
+  }, [loggedIn]);
 
   const handleLogout = () => {
-    dispatch(setLoading(true));
     logout();
-    setIsLoggedIn(false);
-    dispatch(setLoading(true));
+    dispatch(setLoggedIn(false));
+
+    const targetPath = `/${org}/status`;
+    if (pathname !== targetPath) {
+      dispatch(setLoading(true));
+      router.push(targetPath);
+    }
   };
+
+  const items: MenuProps['items'] = [
+    {
+      key: 'user',
+      label: `Signed In As ${loggedInUser?.username || ''}`,
+      onClick: () => {
+        toast.info(`Hello ` + (loggedInUser?.username || 'User'));
+      },
+    },
+    {
+      key: 'logout',
+      label: 'Logout',
+      onClick: handleLogout,
+    },
+  ];
 
   return (
     <>
       <AuthModal visible={showAuthModal} onClose={() => setShowAuthModal(false)} />
-      <nav className="p-4 flex justify-between items-center !text-white">
+      <nav className="fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center !text-white">
         <div className="flex gap-6">
           <Button
             type="text"
@@ -71,7 +112,7 @@ export default function Header() {
         </div>
 
         <div>
-          {!isLoggedIn ? (
+          {!loggedInUser ? (
             <Button
               type="text"
               onClick={() => setShowAuthModal(true)}
@@ -80,13 +121,16 @@ export default function Header() {
               Login / Register
             </Button>
           ) : (
-            <Button
-              type="text"
-              onClick={handleLogout}
-              className="!text-white !text-lg !font-semibold"
-            >
-              <UserOutlined /> Logout
-            </Button>
+            <Dropdown menu={{ items }} trigger={['click']}>
+              <Button
+                type="text"
+                className="!text-white !text-lg !font-semibold capitalize flex items-center gap-2"
+              >
+                <UserOutlined />
+                {loggedInUser?.role || 'viewer'}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
           )}
         </div>
       </nav>

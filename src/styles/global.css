@@ -1,0 +1,36 @@
+/* styles/globals.css or styles/antd-overrides.css */
+
+.authModal label {
+  color: white !important;
+}
+
+.ant-modal-wrap dialog {
+  padding: 0 !important;
+}
+
+.ant-modal-content {
+  background-color: #131a26 !important;
+  color: white !important;
+  box-shadow: none;
+}
+
+.ant-modal-title {
+  color: white !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ant-modal-header {
+  background-color: #131a26 !important;
+  color: white !important;
+  border-bottom: none;
+}
+
+.ant-modal-footer {
+  background-color: #131a26 !important;
+  color: white !important;
+  border-top: none;
+}

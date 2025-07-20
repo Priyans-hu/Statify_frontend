@@ -1,4 +1,5 @@
 import './globals.css';
+import '@/styles/global.css';
 import Header from '@/components/header';
 import LoadingWrapper from '@/components/loadingWrapper';
 import { Providers } from './providers';
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <Header />
           <LoadingWrapper>
-            <RouteGuardWrapper>{children}</RouteGuardWrapper>
+            <RouteGuardWrapper>
+              <div className="pt-20">{children}</div>
+            </RouteGuardWrapper>
           </LoadingWrapper>
         </Providers>
         <ToastContainer />

@@ -2,6 +2,14 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jwtDecode, JwtPayload as DefaultPayload } from 'jwt-decode';
 
+type User = {
+  user_id: string;
+  role: string;
+  org_id: string;
+  username: string;
+  exp: number; // UNIX timestamp
+};
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -49,19 +57,20 @@ export function clearItem(key: string): void {
 /**
  * Get logged in user Info.
  */
-export function getLoggedInUser(): any {
-  const token = getItem<any>('token');
-  const user = token ? decodeToken(token) : null;
+export function getLoggedInUser(): User | null {
+  const token = getItem<string>('token'); // token is a string, not any
+  const user: User | null = token ? (decodeToken(token) as User) : null;
+
   if (!user) {
     console.warn('No user found in localStorage');
     return null;
   }
+
   return user;
 }
 
 export function logout(): void {
   clearItem('token');
-  window.location.reload();
 }
 
 export function decodeToken<T extends object = DefaultPayload>(token: string): T | null {

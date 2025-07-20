@@ -1,15 +1,14 @@
 'use client';
 import Config from '@/constants/config';
-import { setLoading } from '@/features/loading/loadingSlice';
 import { useParams } from 'next/navigation';
 import { setItem } from '@/lib/utils';
-import { Modal, Tabs, Form, Input, Button, Select, Spin, notification } from 'antd';
+import { Modal, Form, Input, Button, Select, Spin } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { setLoggedIn } from '@/features/loggedIn/loggedInSlice';
 
-const { TabPane } = Tabs;
 const { Option } = Select;
 
 export default function AuthModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
@@ -22,7 +21,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
   const [currentLoading, setCurrentLoading] = useState(false);
 
   const handleLogin = async (values: any) => {
-    console.log('Logging in with', values);
     setCurrentLoading(true);
     try {
       const config = {
@@ -38,13 +36,13 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         onClose();
         toast.success('Login successful');
         setItem('token', res.data.data.access_token);
-        dispatch(setLoading(true));
-        window.location.reload();
+        dispatch(setLoggedIn(true));
       } else {
         toast.error('Login failed');
       }
     } catch (error) {
-      toast.error('Login error:');
+      console.error(error);
+      toast.error(`Login error`);
     } finally {
       setCurrentLoading(false);
     }
@@ -69,10 +67,11 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         setIsLogin(true);
         form.resetFields();
       } else {
-        toast.error('Registration failed');
+        toast.error(' failed');
       }
     } catch (error) {
-      toast.error('Registration error');
+      console.error(error);
+      toast.error(`Registration error`);
     } finally {
       setCurrentLoading(false);
     }
@@ -84,8 +83,19 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
   };
 
   return (
-    <Spin spinning={currentLoading}>
-      <Modal open={visible} title={isLogin ? 'Login' : 'Register'} onCancel={onClose} footer={null}>
+    <>
+      <Modal
+        open={visible}
+        title={isLogin ? 'Login' : 'Register'}
+        onCancel={onClose}
+        footer={null}
+        className="authModal"
+      >
+        {currentLoading && (
+          <div className="fixed inset-0 bg-[rgba(255,255,255,0.2)] z-50 flex items-center justify-center">
+            <Spin size="large" />
+          </div>
+        )}
         <Form form={form} layout="vertical" onFinish={isLogin ? handleLogin : handleRegister}>
           {!isLogin && (
             <>
@@ -157,6 +167,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
           </Button>
         </div>
       </Modal>
-    </Spin>
+    </>
   );
 }
