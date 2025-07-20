@@ -1,5 +1,5 @@
 const Config = {
-  API_BASE_URL: 'http://localhost:8000',
-  WEBSOCKET_URL: 'ws://localhost:8000/ws',
+  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  WEBSOCKET_URL: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
 };
 export default Config;
