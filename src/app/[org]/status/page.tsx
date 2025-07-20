@@ -83,7 +83,7 @@ export default function StatusPage() {
   };
 
   return (
-    <main className="max-w-3xl mx-auto p-6 space-y-6">
+    <main className="max-w-3xl mx-auto min-h-screen p-6 space-y-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Service Status</h1>
         <SortServices services={services} onSorted={setSortedServices} />

@@ -135,7 +135,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <Spin spinning={currentLoading}>
+        <Spin spinning={open && currentLoading}>
           <Dialog open={open} onOpenChange={handleDialogChange}>
             <DialogContent className="bg-[#212937] border-0">
               <DialogHeader>

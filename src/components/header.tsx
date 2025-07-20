@@ -65,6 +65,7 @@ export default function Header() {
   const handleLogout = () => {
     logout();
     dispatch(setLoggedIn(false));
+    toast.success('Logged out successfully');
 
     const targetPath = `/${org}/status`;
     if (pathname !== targetPath) {
@@ -100,7 +101,7 @@ export default function Header() {
           >
             Statify {org && ' | ' + formatOrgName(org)}
           </Button>
-          {!pathname?.endsWith('/dashboard') && (
+          {(!pathname?.endsWith('/dashboard') && loggedIn && (loggedInUser?.role === "admin")) && (
             <Button
               type="text"
               onClick={() => handleClick('/dashboard')}
@@ -111,7 +112,7 @@ export default function Header() {
           )}
         </div>
 
-        <div>
+        {pathname !== "/" && (<div>
           {!loggedInUser ? (
             <Button
               type="text"
@@ -132,7 +133,7 @@ export default function Header() {
               </Button>
             </Dropdown>
           )}
-        </div>
+        </div>)}
       </nav>
     </>
   );

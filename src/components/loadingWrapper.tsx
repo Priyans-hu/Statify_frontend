@@ -9,5 +9,11 @@ import { Spin } from 'antd';
 export default function LoadingWrapper({ children }: { children: React.ReactNode }) {
   const isLoading = useSelector((state: RootState) => state.loading.loading);
 
-  return <Spin spinning={isLoading}>{children}</Spin>;
+  return (
+  <Spin spinning={isLoading}>
+    <div className="pt-20">
+      {children}
+    </div>
+  </Spin>
+);
 }

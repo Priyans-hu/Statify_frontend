@@ -5,7 +5,7 @@ import RouteGuard from '../components/routeGuard';
 
 export default function RouteGuardWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const excludedPaths = ['/status'];
+  const excludedPaths = ['/status', '/'];
   const isExcluded = excludedPaths.some((path) => pathname.endsWith(path));
 
   if (isExcluded) {

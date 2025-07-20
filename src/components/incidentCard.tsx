@@ -2,6 +2,7 @@
 
 import { Modal, Timeline } from 'antd';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import ServiceCard from './serviceCard';
 import { usePathname } from 'next/navigation';
 import { useStatusOptions } from '@/hooks/useStatusOptions';
@@ -26,6 +27,8 @@ const getStatusColor = (status: string) => {
       return 'gray';
   }
 };
+
+dayjs.extend(utc);
 
 export default function IncidentCard({ incident, onUpdate, userRole }: IncidentCardProps) {
   const pathname = usePathname();
@@ -73,7 +76,8 @@ export default function IncidentCard({ incident, onUpdate, userRole }: IncidentC
                 {incident.updates.map((update) => (
                   <li key={update.id}>
                     <span className="text-sm text-gray-400">
-                      {dayjs(update.created_at).format('MMM D, YYYY h:mm A')} – {update.description}
+                      {dayjs(update.timestamp).format('MMM D, YYYY h:mm A')}
+                      {update.description}
                     </span>
                   </li>
                 ))}
@@ -132,7 +136,7 @@ export default function IncidentCard({ incident, onUpdate, userRole }: IncidentC
                   <>
                     <div className="text-white">
                       <p className="font-medium">
-                        {dayjs(update.created_at).format('MMM D, YYYY h:mm A')}
+                        {dayjs(update.timestamp).format('MMM D, YYYY h:mm A')}
                       </p>
                       <p>{update.description}</p>
                     </div>
