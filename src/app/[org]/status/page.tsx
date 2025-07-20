@@ -12,6 +12,9 @@ import { useStatusOptions } from '@/hooks/useStatusOptions';
 import ServiceCard from '@/components/serviceCard';
 import IncidentTimeline from '@/components/IndicatorTimeline';
 
+import { connectWebSocket } from '../../../lib/websocket';
+import { toast } from 'react-toastify';
+
 type Service = {
   id: number;
   service_name: string;
@@ -26,7 +29,7 @@ export default function StatusPage() {
   const [services, setServices] = useState<Service[]>([]);
   const { statusCodeToColor, statusCodeToString } = useStatusOptions();
   const [incidents, setIncidents] = useState<any[]>([]);
-
+  
   useEffect(() => {
     dispatch(setLoading(false));
 
@@ -47,10 +50,39 @@ export default function StatusPage() {
         console.error('Failed to load incidents:', err);
       }
     };
-
+    
+    connectWebSocket(org, handleIncomingMessage);
     fetchServices();
     fetchIncidents();
   }, []);
+
+  const handleIncomingMessage = (recievedData: {
+    data: any; type: any; 
+}) => {
+      toast.info(`🔔 New update received!`);
+      if(recievedData && recievedData.data && recievedData.type){
+        const data = recievedData.data;
+        const objectType = recievedData.type as 'service' | 'incident';
+        const updateData = data[objectType];
+        const funcCall ={
+          service: setServices,
+          incident: setIncidents,
+        }
+        if(updateData){
+          funcCall[objectType]((prev: any[]) => {
+              const index = prev.findIndex((svc) => svc.id == updateData.id);
+              if (index !== -1) {
+                return prev.map((svc) =>
+                  svc.id == updateData.id ? { ...svc, ...updateData } : svc
+                );
+              } else {
+                return [...prev, updateData];
+              }
+            }
+          );
+        }
+      }
+  };
 
   return (
     <main className="max-w-3xl mx-auto p-6 space-y-6">
