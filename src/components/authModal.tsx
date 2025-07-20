@@ -1,6 +1,6 @@
 'use client';
 import Config from '@/constants/config';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { setItem } from '@/lib/utils';
 import { Modal, Form, Input, Button, Select, Spin } from 'antd';
 import axios from 'axios';
@@ -17,6 +17,7 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
   const [isLogin, setIsLogin] = useState(true);
   const dispatch = useDispatch();
   const [organizations, setOrganizations] = useState<any[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -80,8 +81,15 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
       const res = await axios(config);
       if (res.status === 200) {
         toast.success('Registered successfully, you can login now');
-        setIsLogin(true);
         form.resetFields();
+        const organization = organizations.find((org) => org.id === values.org_id);
+        if(organization.slug){
+            setIsLogin(true);
+            router.push(`/${organization.slug}/status`);
+        }
+        else{
+            router.push("/");
+        }
       } else {
         toast.error(' failed');
       }

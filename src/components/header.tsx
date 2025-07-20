@@ -65,6 +65,7 @@ export default function Header() {
   const handleLogout = () => {
     logout();
     dispatch(setLoggedIn(false));
+    toast.success('Logged out successfully');
 
     const targetPath = `/${org}/status`;
     if (pathname !== targetPath) {
