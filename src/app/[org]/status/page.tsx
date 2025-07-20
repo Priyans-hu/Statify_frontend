@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '@/features/loading/loadingSlice';
 
+import { useParams } from 'next/navigation';
 import Config from '@/constants/config';
 import { useStatusOptions } from '@/hooks/useStatusOptions';
 
@@ -18,7 +19,8 @@ type Service = {
   status: string;
 };
 
-export default function StatusPage({ params }: { params: { org: string } }) {
+export default function StatusPage() {
+  const params = useParams();
   const org = params.org;
   const dispatch = useDispatch();
   const [services, setServices] = useState<Service[]>([]);
@@ -39,15 +41,13 @@ export default function StatusPage({ params }: { params: { org: string } }) {
 
     const fetchIncidents = async () => {
       try {
-        const res = await axios.get(
-          `${Config.API_BASE_URL}/incidents?org=${org}`
-        );
+        const res = await axios.get(`${Config.API_BASE_URL}/incidents/active?org=${org}`);
         setIncidents(res?.data?.incidents || []);
       } catch (err) {
         console.error('Failed to load incidents:', err);
       }
     };
-    
+
     fetchServices();
     fetchIncidents();
   }, []);
