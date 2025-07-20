@@ -2,39 +2,28 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-
-import { Button, Modal, Input, Select, Tag, message } from 'antd';
+import { Button, Modal, Input, Select, message } from 'antd';
 import api from '@/lib/api';
 import Config from '@/constants/config';
-import { Card, CardContent } from '@/components/ui/card';
+import IncidentCard from '@/components/incidentCard';
+import { getLoggedInUser } from '@/lib/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-type IncidentUpdate = {
-  id: number;
-  description: string;
-  created_at: string;
-};
-
-type Incident = {
-  id: number;
-  title: string;
-  status: string;
-  description: string | null;
-  started_at: string;
-  services: { service_name: string }[];
-  updates: IncidentUpdate[];
-};
+import { Incident } from '@/types/incident';
 
 export default function IncidentsPage() {
   const { org } = useParams();
   const router = useRouter();
+  const user = getLoggedInUser();
+  const userRole = user?.role || 'viewer';
+
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [updateText, setUpdateText] = useState('');
-  const [newStatus, setNewStatus] = useState<string>(''); // for status update
+  const [newStatus, setNewStatus] = useState<string>('');
 
   const fetchIncidents = useCallback(async () => {
     try {
@@ -50,21 +39,6 @@ export default function IncidentsPage() {
   useEffect(() => {
     fetchIncidents();
   }, [fetchIncidents]);
-
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'investigating':
-        return 'orange';
-      case 'identified':
-        return 'red';
-      case 'monitoring':
-        return 'blue';
-      case 'resolved':
-        return 'green';
-      default:
-        return 'gray';
-    }
-  };
 
   const handleUpdate = (incident: Incident) => {
     setSelectedIncident(incident);
@@ -107,47 +81,12 @@ export default function IncidentsPage() {
         ) : (
           <div className="grid gap-4">
             {incidents.map((incident) => (
-              <Card key={incident.id} className="bg-[#212937] text-white border-0">
-                <CardContent>
-                  <div className="flex justify-between items-center my-2">
-                    <span className="text-lg font-semibold">{incident.title}</span>
-                    <Tag className="capitalize" color={getStatusColor(incident.status)}>
-                      {incident.status}
-                    </Tag>
-                  </div>
-
-                  <p className="text-sm text-gray-400 mb-2">{incident.description}</p>
-                  <p className="text-sm text-gray-500 mb-2">
-                    Started at: {new Date(incident.started_at).toLocaleString()}
-                  </p>
-
-                  <div className="mb-2">
-                    <strong>Services Affected:</strong>{' '}
-                    {incident.services.map((s) => s.service_name).join(', ') || 'None'}
-                  </div>
-
-                  {incident.updates.length > 0 && (
-                    <div className="mt-2">
-                      <strong>Updates:</strong>
-                      <ul className="list-disc ml-6">
-                        {incident.updates.map((update) => (
-                          <li key={update.id}>
-                            <span className="text-sm text-gray-400">
-                              {new Date(update.created_at).toLocaleString()} – {update.description}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  <div className="mt-4 flex gap-4">
-                    <Button onClick={() => handleUpdate(incident)} type="default">
-                      Update / Resolve
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <IncidentCard
+                key={incident.id}
+                incident={incident}
+                userRole={userRole}
+                onUpdate={handleUpdate}
+              />
             ))}
           </div>
         )}

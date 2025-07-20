@@ -44,11 +44,20 @@ export default function StatusPage() {
   }, [org]);
 
   useEffect(() => {
-    dispatch(setLoading(true));
-    connectWebSocket(org, handleIncomingMessage);
-    fetchServices();
-    fetchIncidents();
-    dispatch(setLoading(false));
+    const initialize = async () => {
+      dispatch(setLoading(true));
+      try {
+        connectWebSocket(org, handleIncomingMessage);
+        await fetchServices();
+        await fetchIncidents();
+      } catch (err) {
+        console.error('Initialization failed:', err);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    initialize();
   }, [fetchIncidents, fetchServices, dispatch, org]);
 
   const handleIncomingMessage = (recievedData: { data: any; type: any }) => {
