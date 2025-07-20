@@ -13,7 +13,7 @@ import ServiceCard from '@/components/serviceCard';
 import IncidentTimeline from '@/components/IndicatorTimeline';
 
 import { connectWebSocket } from '../../../lib/websocket';
-import SortServices, { Service } from '@/components/sortServices';
+import SortServices from '@/components/sortServices';
 
 export default function StatusPage() {
   const params = useParams();
