@@ -76,7 +76,7 @@ export default function IncidentCard({ incident, onUpdate, userRole }: IncidentC
                 {incident.updates.map((update) => (
                   <li key={update.id}>
                     <span className="text-sm text-gray-400">
-                      {dayjs(update.created_at).utc().local().format('MMM DD, YYYY h:mm A')}
+                      {dayjs(update.timestamp).format('MMM D, YYYY h:mm A')}
                       {update.description}
                     </span>
                   </li>
@@ -136,7 +136,7 @@ export default function IncidentCard({ incident, onUpdate, userRole }: IncidentC
                   <>
                     <div className="text-white">
                       <p className="font-medium">
-                        {dayjs(update.created_at).format('MMM D, YYYY h:mm A')}
+                        {dayjs(update.timestamp).format('MMM D, YYYY h:mm A')}
                       </p>
                       <p>{update.description}</p>
                     </div>

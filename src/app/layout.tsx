@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <LoadingWrapper>
             <RouteGuardWrapper>
-              <div className="pt-20">{children}</div>
+              {children}
             </RouteGuardWrapper>
           </LoadingWrapper>
         </Providers>

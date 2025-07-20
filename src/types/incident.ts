@@ -2,6 +2,7 @@ export type IncidentUpdate = {
   id: number;
   description: string;
   created_at: string;
+  timestamp: string;
 };
 
 export type Incident = {
