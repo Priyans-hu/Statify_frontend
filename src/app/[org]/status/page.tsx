@@ -14,6 +14,7 @@ import IncidentTimeline from '@/components/IndicatorTimeline';
 
 import { connectWebSocket } from '../../../lib/websocket';
 import SortServices from '@/components/sortServices';
+import { Service } from '@/types/service';
 
 export default function StatusPage() {
   const params = useParams();
