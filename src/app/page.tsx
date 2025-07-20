@@ -42,6 +42,7 @@ export default function Home() {
   }, []);
 
   const handleSelect = (orgSlug: string) => {
+    dispatch(setLoading(true));
     router.push(`/${orgSlug}/status`);
   };
 

@@ -101,7 +101,7 @@ export default function Header() {
           >
             Statify {org && ' | ' + formatOrgName(org)}
           </Button>
-          {!pathname?.endsWith('/dashboard') && (
+          {(!pathname?.endsWith('/dashboard') && loggedIn && (loggedInUser?.role === "admin")) && (
             <Button
               type="text"
               onClick={() => handleClick('/dashboard')}
