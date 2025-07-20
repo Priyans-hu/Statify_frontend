@@ -33,9 +33,8 @@ export default function DashboardPage() {
   const org = params?.org;
   const [services, setServices] = useState<any[]>([]);
   const [name, setName] = useState('');
-  const [status, setStatus] = useState("");
-  const { statusOptions, statusCodeToColor, statusCodeToString } =
-    useStatusOptions();
+  const [status, setStatus] = useState('');
+  const { statusOptions, statusCodeToColor, statusCodeToString } = useStatusOptions();
   const dispatch = useDispatch();
   const [currentLoading, setCurrentLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -68,7 +67,7 @@ export default function DashboardPage() {
   };
 
   const handleAddService = async () => {
-    if(!name || !status) {
+    if (!name || !status) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -84,8 +83,8 @@ export default function DashboardPage() {
       };
       setCurrentLoading(true);
       await axios(config);
-      setName("");
-      setStatus("");
+      setName('');
+      setStatus('');
       handleDialogChange(false);
       toast.success('Service added successfully');
       fetchServices();
@@ -121,9 +120,9 @@ export default function DashboardPage() {
 
   const handleDialogChange = (isOpen: boolean) => {
     setOpen(isOpen);
-    if (!isOpen){
+    if (!isOpen) {
       setName('');
-      setStatus("");
+      setStatus('');
     }
   };
 
@@ -139,9 +138,7 @@ export default function DashboardPage() {
               </DialogTrigger>
               <DialogContent className="bg-[#212937] border-0">
                 <DialogHeader>
-                  <DialogTitle className="text-center">
-                    Add New Service
-                  </DialogTitle>
+                  <DialogTitle className="text-center">Add New Service</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <Input
@@ -154,17 +151,14 @@ export default function DashboardPage() {
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 text-white">
-                        {statusOptions.map((option) => (
-                          <SelectItem key={option.id} value={`${option.id}`}>
-                            {option.status}
-                          </SelectItem>
-                        ))}
+                      {statusOptions.map((option) => (
+                        <SelectItem key={option.id} value={`${option.id}`}>
+                          {option.status}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    className="bg-green-600 text-white text-md"
-                    onClick={handleAddService}
-                  >
+                  <Button className="bg-green-600 text-white text-md" onClick={handleAddService}>
                     Submit
                   </Button>
                 </div>
@@ -176,10 +170,7 @@ export default function DashboardPage() {
         <section className="grid gap-4">
           {services.length > 0 ? (
             services.map((svc) => (
-              <Card
-                key={svc.id}
-                className="p-4 bg-[#212937] text-white border-0"
-              >
+              <Card key={svc.id} className="p-4 bg-[#212937] text-white border-0">
                 <CardContent className="flex justify-between w-full items-center gap-4 p-0">
                   <div>
                     <p className="font-medium">{svc.service_name}</p>
@@ -191,14 +182,12 @@ export default function DashboardPage() {
                       onValueChange={(val) => handleStatusChange(svc.id, val)}
                     >
                       <SelectTrigger
-                        className={`w-full border-0 text-md font-bold text-white ${
+                        className={`w-full border-0 text-md font-bold text-white flex justify-between items-center ${
                           statusCodeToColor(svc.status_code) || 'bg-slate-700'
                         }`}
                       >
                         <SelectValue
-                          placeholder={
-                            statusCodeToString(svc.status_code) || 'Unknown'
-                          }
+                          placeholder={statusCodeToString(svc.status_code) || 'Unknown'}
                         />
                       </SelectTrigger>
 
@@ -220,8 +209,7 @@ export default function DashboardPage() {
             ))
           ) : (
             <p className="mt-4 text-center text-sm text-muted-foreground">
-              No services available at the moment. Please Start by adding a new
-              Service.
+              No services available at the moment. Please Start by adding a new Service.
             </p>
           )}
         </section>

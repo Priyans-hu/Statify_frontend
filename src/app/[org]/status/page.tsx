@@ -15,45 +15,48 @@ type Service = {
   id: number;
   service_name: string;
   status_code: number;
-  status: String;
+  status: string;
 };
-
-const incidents = [
-  {
-    title: 'Database latency spike',
-    description: 'We are investigating elevated latencies.',
-    time: '2025-07-16 10:20 AM',
-  },
-];
 
 export default function StatusPage({ params }: { params: { org: string } }) {
   const org = params.org;
   const dispatch = useDispatch();
   const [services, setServices] = useState<Service[]>([]);
   const { statusCodeToColor, statusCodeToString } = useStatusOptions();
+  const [incidents, setIncidents] = useState<any[]>([]);
 
   useEffect(() => {
     dispatch(setLoading(false));
 
     const fetchServices = async () => {
       try {
-        const res = await axios.get(
-          `${Config.API_BASE_URL}/services?org=${org}`
-        );
+        const res = await axios.get(`${Config.API_BASE_URL}/services?org=${org}`);
         setServices(res.data);
       } catch (err) {
         console.error('Failed to load services:', err);
       }
     };
 
+    const fetchIncidents = async () => {
+      try {
+        const res = await axios.get(
+          `${Config.API_BASE_URL}/incidents?org=${org}`
+        );
+        setIncidents(res?.data?.incidents || []);
+      } catch (err) {
+        console.error('Failed to load incidents:', err);
+      }
+    };
+    
     fetchServices();
+    fetchIncidents();
   }, []);
 
   return (
-    <main className='max-w-3xl mx-auto p-6 space-y-6'>
-      <h1 className='text-2xl font-semibold'>Service Status</h1>
+    <main className="max-w-3xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-semibold">Service Status</h1>
 
-      <section className='space-y-3'>
+      <section className="space-y-3">
         {services.map((svc) => (
           <ServiceCard
             key={svc.id}
@@ -65,7 +68,7 @@ export default function StatusPage({ params }: { params: { org: string } }) {
       </section>
 
       <section>
-        <h2 className='text-xl font-medium mb-2'>Active Incidents</h2>
+        <h2 className="text-xl font-medium mb-2">Active Incidents</h2>
         <IncidentTimeline incidents={incidents} />
       </section>
     </main>

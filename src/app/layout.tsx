@@ -16,20 +16,14 @@ export const metadata = {
   description: 'System health monitoring',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en'>
+    <html lang="en">
       <body className={`${roboto.className} bg-[#131a26] text-white`}>
         <Providers>
           <Header />
           <LoadingWrapper>
-            <RouteGuardWrapper>
-              {children}
-            </RouteGuardWrapper>
+            <RouteGuardWrapper>{children}</RouteGuardWrapper>
           </LoadingWrapper>
         </Providers>
         <ToastContainer />

@@ -10,9 +10,9 @@ export default function Home() {
     dispatch(setLoading(false));
   }, []);
   return (
-    <main className='flex flex-col items-center justify-center min-h-screen bg-[#131a26] text-white'>
-      <h1 className='text-4xl font-bold mb-2'>Status Dashboard</h1>
-      <p className='text-gray-300'>Monitor system health in real-time</p>
+    <main className="flex flex-col items-center justify-center min-h-screen bg-[#131a26] text-white">
+      <h1 className="text-4xl font-bold mb-2">Status Dashboard</h1>
+      <p className="text-gray-300">Monitor system health in real-time</p>
     </main>
   );
 }
