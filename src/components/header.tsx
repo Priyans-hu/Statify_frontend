@@ -26,9 +26,15 @@ export default function Header() {
   const handleClick = (path: string) => {
     dispatch(setLoading(true));
     if (org) {
-      router.push(`/${org}${path}`);
+      const targetPath = `/${org}${path}`;
+      if (pathname !== targetPath) {
+        router.push(targetPath);
+      }
     } else {
-      router.push(path);
+      const targetPath = path;
+      if (pathname !== targetPath) {
+        router.push(targetPath);
+      }
     }
   };
 
