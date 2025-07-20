@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { Button, Tag } from 'antd';
 import { Card, CardContent } from '@/components/ui/card';
 import { IncidentCardProps, Incident } from '@/types/incident';
+import { Service } from '@/types/service';
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
@@ -106,14 +107,17 @@ export default function IncidentCard({ incident, onUpdate, userRole }: IncidentC
           {selectedIncident?.services.length ? (
             <div className="space-y-2 my-4">
               <div className="font-semibold text-xl">Affected Services:</div>
-              {selectedIncident.services.map((svc) => (
-                <ServiceCard
-                  key={svc.id}
-                  name={svc.service_name}
-                  status={statusCodeToString(svc.status_code)}
-                  bgClass={statusCodeToColor(svc.status_code) || 'bg-slate-700'}
-                />
-              ))}
+              {selectedIncident.services.map((svc) => {
+                const service = svc as Service;
+                return (
+                  <ServiceCard
+                    key={service.id}
+                    name={service.service_name}
+                    status={statusCodeToString(service.status_code)}
+                    bgClass={statusCodeToColor(service.status_code) || 'bg-slate-700'}
+                  />
+                );
+              })}
             </div>
           ) : (
             <p>No services affected.</p>
