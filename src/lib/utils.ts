@@ -35,6 +35,8 @@ export function setItem<T>(key: string, value: T): void {
  */
 export function getItem<T>(key: string): T | null {
   try {
+    if (typeof window === 'undefined') return null;
+
     const json = localStorage.getItem(key);
     return json ? (JSON.parse(json) as T) : null;
   } catch (err) {

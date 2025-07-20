@@ -49,8 +49,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
   };
 
   const handleRegister = async (values: any) => {
-    console.log('Registering with', values);
-    // dispatch register action
     setCurrentLoading(true);
     try {
       const config = {

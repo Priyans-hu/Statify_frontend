@@ -14,7 +14,6 @@ export const useStatusOptions = () => {
       setStatusOptions(cachedStatusOptions);
     } else {
       fetchStatusOptions();
-      console.log('calling, no cache present');
     }
   }, []);
 
