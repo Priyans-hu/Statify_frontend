@@ -16,9 +16,7 @@ export default function IncidentTimeline({ incidents }: Props) {
     <>
       <div className="space-y-4">
         {incidents.map((incident) => (
-          <>
-            <IncidentCard key={incident.id} incident={incident} userRole={userRole} />
-          </>
+          <IncidentCard key={incident.id} incident={incident} userRole={userRole} />
         ))}
       </div>
     </>
