@@ -20,6 +20,8 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 
+import api from '@/lib/api';
+
 export default function NewIncidentPage() {
   const { org } = useParams();
   const router = useRouter();
@@ -64,7 +66,7 @@ export default function NewIncidentPage() {
 
     try {
       setLoading(true);
-      await axios.post(`${Config.API_BASE_URL}/incidents?org=${org}`, payload);
+      await api.post(`${Config.API_BASE_URL}/incidents?org=${org}`, payload);
       alert('Incident created successfully');
       router.push(`/${org}/incidents`);
     } catch (err) {

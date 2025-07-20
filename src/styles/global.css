@@ -1,6 +1,6 @@
 /* styles/globals.css or styles/antd-overrides.css */
 
-* {
+.authModal label {
   color: white !important;
 }
 

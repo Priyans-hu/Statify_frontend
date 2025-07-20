@@ -85,7 +85,13 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
 
   return (
     <Spin spinning={currentLoading}>
-      <Modal open={visible} title={isLogin ? 'Login' : 'Register'} onCancel={onClose} footer={null}>
+      <Modal
+        open={visible}
+        title={isLogin ? 'Login' : 'Register'}
+        onCancel={onClose}
+        footer={null}
+        className="authModal"
+      >
         <Form form={form} layout="vertical" onFinish={isLogin ? handleLogin : handleRegister}>
           {!isLogin && (
             <>

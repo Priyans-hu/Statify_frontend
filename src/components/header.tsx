@@ -45,6 +45,7 @@ export default function Header() {
     logout();
     setIsLoggedIn(false);
     dispatch(setLoading(true));
+    router.push(`/${org}/status`);
   };
 
   return (
