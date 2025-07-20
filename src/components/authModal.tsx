@@ -4,16 +4,34 @@ import { useParams } from 'next/navigation';
 import { setItem } from '@/lib/utils';
 import { Modal, Form, Input, Button, Select, Spin } from 'antd';
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { setLoggedIn } from '@/features/loggedIn/loggedInSlice';
+import api from '@/lib/api';
+import { Organization } from '@/types/organization';
 
 const { Option } = Select;
 
 export default function AuthModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const [isLogin, setIsLogin] = useState(true);
   const dispatch = useDispatch();
+  const [organizations, setOrganizations] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      try {
+        const response = await api.get('/organizations');
+        setOrganizations(response.data as Organization[]);
+      } catch (err: any) {
+        console.error('Failed to fetch organizations', err);
+        toast.error(err.response?.data?.message || 'Failed to fetch organizations');
+      }
+    };
+
+    fetchOrganizations();
+  }, []);
+
   const [form] = Form.useForm();
   const params = useParams();
   const org = params?.org as string | undefined;
@@ -52,7 +70,7 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
     setCurrentLoading(true);
     try {
       const config = {
-        url: Config.API_BASE_URL + '/auth/register',
+        url: `${Config.API_BASE_URL}/auth/register?org=${org}`,
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -115,11 +133,25 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
                 <Input.Password />
               </Form.Item>
               <Form.Item
-                label="Organisation ID"
+                label="Organization"
                 name="org_id"
-                rules={[{ required: true, message: 'Please enter organisation ID' }]}
+                rules={[{ required: true, message: 'Please select an organization' }]}
               >
-                <Input />
+                <Select
+                  placeholder="Select an organization"
+                  showSearch
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    typeof option?.label === 'string' &&
+                    option.label.toLowerCase().includes(input.toLowerCase())
+                  }
+                >
+                  {organizations.map((org) => (
+                    <Option key={org.id} value={org.id}>
+                      {org.name}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
               <Form.Item
                 label="Role"
