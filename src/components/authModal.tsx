@@ -83,12 +83,11 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.success('Registered successfully, you can login now');
         form.resetFields();
         const organization = organizations.find((org) => org.id === values.org_id);
-        if(organization.slug){
-            setIsLogin(true);
-            router.push(`/${organization.slug}/status`);
-        }
-        else{
-            router.push("/");
+        if (organization.slug) {
+          setIsLogin(true);
+          router.push(`/${organization.slug}/status`);
+        } else {
+          router.push('/');
         }
       } else {
         toast.error(' failed');
