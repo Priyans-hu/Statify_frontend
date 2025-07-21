@@ -2,7 +2,10 @@
 
 > Modern service status dashboard — built with Next.js, Tailwind, Redux, and TypeScript.
 
-![Statify UI](./statify-status.png)
+<p float="left">
+  <img src="./statify-status.png" width="45%" />
+  <img src="./statify-incident.png" width="45%" />
+</p>
 
 ## 🚀 Overview
 
