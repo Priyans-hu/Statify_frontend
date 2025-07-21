@@ -3,6 +3,7 @@ export type Service = {
   service_name: string;
   status_code: number;
   status: string;
+  uptime?: String;
 };
 
 export type Service_card = {
