@@ -10,10 +10,8 @@ export default function LoadingWrapper({ children }: { children: React.ReactNode
   const isLoading = useSelector((state: RootState) => state.loading.loading);
 
   return (
-  <Spin spinning={isLoading}>
-    <div className="pt-20">
-      {children}
-    </div>
-  </Spin>
-);
+    <Spin spinning={isLoading}>
+      <div className="pt-20">{children}</div>
+    </Spin>
+  );
 }

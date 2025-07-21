@@ -3,6 +3,7 @@ export type IncidentUpdate = {
   description: string;
   created_at: string;
   timestamp: string;
+  resolved_at?: string; // ISO date string
 };
 
 export type Incident = {
@@ -11,6 +12,7 @@ export type Incident = {
   status: string;
   description: string | null;
   started_at: string;
+  resolved_at?: string;
   services: { service_name: string }[];
   updates: IncidentUpdate[];
 };

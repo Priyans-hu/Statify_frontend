@@ -101,7 +101,7 @@ export default function Header() {
           >
             Statify {org && ' | ' + formatOrgName(org)}
           </Button>
-          {(!pathname?.endsWith('/dashboard') && loggedIn && (loggedInUser?.role === "admin")) && (
+          {!pathname?.endsWith('/dashboard') && loggedIn && loggedInUser?.role === 'admin' && (
             <Button
               type="text"
               onClick={() => handleClick('/dashboard')}
@@ -112,28 +112,30 @@ export default function Header() {
           )}
         </div>
 
-        {pathname !== "/" && (<div>
-          {!loggedInUser ? (
-            <Button
-              type="text"
-              onClick={() => setShowAuthModal(true)}
-              className="!text-white !text-lg !font-semibold"
-            >
-              Login / Register
-            </Button>
-          ) : (
-            <Dropdown menu={{ items }} trigger={['click']}>
+        {pathname !== '/' && (
+          <div>
+            {!loggedInUser ? (
               <Button
                 type="text"
-                className="!text-white !text-lg !font-semibold capitalize flex items-center gap-2"
+                onClick={() => setShowAuthModal(true)}
+                className="!text-white !text-lg !font-semibold"
               >
-                <UserOutlined />
-                {loggedInUser?.role || 'viewer'}
-                <DownOutlined />
+                Login / Register
               </Button>
-            </Dropdown>
-          )}
-        </div>)}
+            ) : (
+              <Dropdown menu={{ items }} trigger={['click']}>
+                <Button
+                  type="text"
+                  className="!text-white !text-lg !font-semibold capitalize flex items-center gap-2"
+                >
+                  <UserOutlined />
+                  {loggedInUser?.role || 'viewer'}
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+            )}
+          </div>
+        )}
       </nav>
     </>
   );
