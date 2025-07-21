@@ -10,9 +10,7 @@ import {
   DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 
-import { Service } from '@/types/service';
-
-type SortKey = 'service_name' | 'status_code' | 'status';
+import { Service, SortKey } from '@/types/service';
 
 interface SortServicesProps {
   services: Service[];

@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import RouteGuard from '../components/routeGuard';
+import RouteGuard from '@/components/routeGuard';
 
 export default function RouteGuardWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

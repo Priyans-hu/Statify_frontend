@@ -115,7 +115,7 @@ export default function IncidentCard({ incident, onUpdate, userRole }: IncidentC
                 return (
                   <ServiceCard
                     key={service.id}
-                    name={service.service_name}
+                    service_name={service.service_name}
                     status={statusCodeToString(service.status_code)}
                     bgClass={statusCodeToColor(service.status_code) || 'bg-slate-700'}
                   />

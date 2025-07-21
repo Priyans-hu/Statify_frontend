@@ -12,9 +12,11 @@ import { useStatusOptions } from '@/hooks/useStatusOptions';
 import ServiceCard from '@/components/serviceCard';
 import IncidentTimeline from '@/components/IndicatorTimeline';
 
-import { connectWebSocket } from '../../../lib/websocket';
+import { connectWebSocket } from '@/lib/websocket';
 import SortServices from '@/components/sortServices';
 import { Service } from '@/types/service';
+
+const uptimeCache: any[] | null = null;
 
 export default function StatusPage() {
   const params = useParams();
@@ -25,6 +27,7 @@ export default function StatusPage() {
   const [sortedServices, setSortedServices] = useState<Service[]>(services);
   const { statusCodeToColor, statusCodeToString } = useStatusOptions();
   const [incidents, setIncidents] = useState<any[]>([]);
+  const [uptimeMetrics, setUptimeMetrics] = useState<any[]>([]);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -44,13 +47,62 @@ export default function StatusPage() {
     }
   }, [org]);
 
+  const fetchUptimeMetrics = useCallback(async () => {
+    const cached = sessionStorage.getItem(`uptimeMetrics-${org}`);
+
+    if (cached && cached?.length > 0) {
+      console.log('Using sessionStorage cache: uptime metrics');
+      setUptimeMetrics(JSON.parse(cached));
+      return;
+    }
+
+    try {
+      const res = await axios.get(`${Config.API_BASE_URL}/metrics/?org=${org}`);
+      const metrics = res.data.services_uptime;
+      sessionStorage.setItem(`uptimeMetrics-${org}`, JSON.stringify(metrics));
+      setUptimeMetrics(metrics);
+    } catch (err) {
+      console.error('Failed to load incidents:', err);
+    }
+  }, [org]);
+
+  const mergeServicesWithUptime = (services: Service[], uptimeMetrics: any): Service[] => {
+    const uptimeMap = new Map<number, { uptime: number; status: string }>();
+
+    uptimeMetrics = uptimeMetrics?.length > 0 ? uptimeMetrics : uptimeCache;
+    console.log(uptimeMetrics);
+    for (const uptimeSvc of uptimeMetrics) {
+      uptimeMap.set(uptimeSvc.id, {
+        uptime: uptimeSvc.uptime,
+        status: uptimeSvc.status,
+      });
+    }
+
+    return services.map((service) => {
+      const match = uptimeMap.get(Number(service.id));
+
+      const status = match?.status ?? service.status ?? 'Unknown';
+      const uptime = match?.uptime != null ? `${match.uptime.toFixed(2)}%` : undefined;
+
+      console.log(service.id, uptime);
+      return {
+        ...service,
+        status,
+        uptime,
+      };
+    });
+  };
+
   useEffect(() => {
     const initialize = async () => {
       dispatch(setLoading(true));
       try {
         connectWebSocket(org, handleIncomingMessage);
-        await fetchServices();
-        await fetchIncidents();
+        await fetchServices(); // get services
+        await fetchIncidents(); // get active incidents
+        await fetchUptimeMetrics(); // get metrics for service
+        const serviceWithUptime = mergeServicesWithUptime(services, uptimeMetrics); // map uptime with service to service id
+        setServices(serviceWithUptime ?? services);
       } catch (err) {
         console.error('Initialization failed:', err);
       } finally {
@@ -96,8 +148,9 @@ export default function StatusPage() {
             {sortedServices.map((svc) => (
               <ServiceCard
                 key={svc.id}
-                name={svc.service_name}
+                service_name={svc.service_name}
                 status={statusCodeToString(svc.status_code)}
+                uptime={svc.uptime}
                 bgClass={statusCodeToColor(svc.status_code) || 'bg-slate-700'}
               />
             ))}
