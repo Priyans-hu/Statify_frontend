@@ -14,7 +14,9 @@ import IncidentTimeline from '@/components/IndicatorTimeline';
 
 import { connectWebSocket } from '@/lib/websocket';
 import SortServices from '@/components/sortServices';
-import { Service, Service_card } from '@/types/service';
+import { Service } from '@/types/service';
+
+const uptimeCache: any[] | null = null;
 
 export default function StatusPage() {
   const params = useParams();
@@ -46,10 +48,18 @@ export default function StatusPage() {
   }, [org]);
 
   const fetchUptimeMetrics = useCallback(async () => {
+    const cached = sessionStorage.getItem(`uptimeMetrics-${org}`);
+
+    if (cached && cached?.length > 0) {
+      console.log('Using sessionStorage cache: uptime metrics');
+      setUptimeMetrics(JSON.parse(cached));
+      return;
+    }
+
     try {
       const res = await axios.get(`${Config.API_BASE_URL}/metrics/?org=${org}`);
-
-      const metrics = Array.isArray(res.data?.services_uptime) ? res.data.services_uptime : [];
+      const metrics = res.data.services_uptime;
+      sessionStorage.setItem(`uptimeMetrics-${org}`, JSON.stringify(metrics));
       setUptimeMetrics(metrics);
     } catch (err) {
       console.error('Failed to load incidents:', err);
@@ -59,6 +69,7 @@ export default function StatusPage() {
   const mergeServicesWithUptime = (services: Service[], uptimeMetrics: any): Service[] => {
     const uptimeMap = new Map<number, { uptime: number; status: string }>();
 
+    uptimeMetrics = uptimeMetrics?.length > 0 ? uptimeMetrics : uptimeCache;
     console.log(uptimeMetrics);
     for (const uptimeSvc of uptimeMetrics) {
       uptimeMap.set(uptimeSvc.id, {
@@ -67,19 +78,13 @@ export default function StatusPage() {
       });
     }
 
-    console.log(uptimeMap);
-
     return services.map((service) => {
       const match = uptimeMap.get(Number(service.id));
-
-      if (!match) {
-        console.warn(`⚠️ No uptime match found for service ID ${service.id}`);
-      }
 
       const status = match?.status ?? service.status ?? 'Unknown';
       const uptime = match?.uptime != null ? `${match.uptime.toFixed(2)}%` : undefined;
 
-      console.log({ ...service, uptime });
+      console.log(service.id, uptime);
       return {
         ...service,
         status,
@@ -95,9 +100,9 @@ export default function StatusPage() {
         connectWebSocket(org, handleIncomingMessage);
         await fetchServices(); // get services
         await fetchIncidents(); // get active incidents
-        // await fetchUptimeMetrics(); // get metrics for service
-        // const serviceWithUptime = mergeServicesWithUptime(services, uptimeMetrics); // map uptime with service to service id
-        // setServices(serviceWithUptime);
+        await fetchUptimeMetrics(); // get metrics for service
+        const serviceWithUptime = mergeServicesWithUptime(services, uptimeMetrics); // map uptime with service to service id
+        setServices(serviceWithUptime ?? services);
       } catch (err) {
         console.error('Initialization failed:', err);
       } finally {

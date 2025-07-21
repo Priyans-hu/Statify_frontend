@@ -3,13 +3,13 @@ export type Service = {
   service_name: string;
   status_code: number;
   status: string;
-  uptime?: String;
+  uptime?: string;
 };
 
 export type Service_card = {
   service_name: string;
   status: string;
-  uptime?: String;
+  uptime?: string;
   bgClass?: string;
 };
 

@@ -1,117 +1,135 @@
-# 🔧 StatusPage Frontend
+# ⚡ Statify Frontend
 
-A sleek, multi-tenant status page frontend built with **Next.js (App Router)** and **TypeScript**. Designed for SaaS-style service monitoring with organization-specific dashboards and public status pages.
+> Modern service status dashboard — built with Next.js, Tailwind, Redux, and TypeScript.
 
-<br/>
+![Statify UI](./statify-status.png)
 
-## 🚀 Features
+## 🚀 Overview
 
-- ✅ **Dynamic Routing** — `/[org]/dashboard`, `/[org]/status`, etc.
-- 🔐 **Auth Modal** — Login/Register with token-based flow
-- 🌐 **Public Status Page** — Show real-time service status for any org
-- 🧭 **Dashboard** — Add/edit services, monitor incidents
-- 🧩 **Reusable Components** — Cards, Badges, Modals, Hooks
-- 🎨 **Dark-Slate Themed UI** — Clean, modern aesthetics using Tailwind + Ant Design
-- 🌍 **Multi-Org Support** — Each org has isolated context (like `/netflix`, `/openai`, etc.)
+Statify helps organizations transparently communicate service uptime, incidents, and maintenance windows to users. This frontend project powers the real-time dashboard and admin interface.
 
-<br/>
+![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-38B2AC?logo=tailwindcss&logoColor=white)
+![Redux Toolkit](https://img.shields.io/badge/Redux_Toolkit-764ABC?logo=redux&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-gray?logo=react&logoColor=white)
+![Deployed on Netlify](https://img.shields.io/badge/Deployed-Netlify-00C7B7?logo=netlify&logoColor=white)
 
-## 🧱 Tech Stack
+## ✅ Features
 
-| Layer         | Tech                                               |
-| ------------- | -------------------------------------------------- |
-| **Framework** | [Next.js 14 (App Router)](https://nextjs.org/docs) |
-| **Lang**      | TypeScript                                         |
-| **UI Kit**    | TailwindCSS + shadcn-ui + Ant Design               |
-| **State**     | Redux Toolkit                                      |
-| **API Calls** | Axios                                              |
-| **Routing**   | Dynamic Segments via App Router                    |
+### Functional
 
-<br/>
+- 🔐 Login/Register + token handling (JWT)
+- 🛠️ Admin dashboard for managing:
+  - Organizations
+  - Services (CRUD)
+  - Incidents & Maintenance
+- 📊 Uptime visibility per service
+- 🌍 Public status page
+- 🔁 Real-time updates via WebSocket
+- 🎨 Clean responsive UI (dark mode)
 
-## 🗂 Folder Structure
+### Non-Functional
+
+- ⚡ Fast SPA experience (Next.js App Router)
+- 🧩 Modular folder structure for scale
+- 🧪 Typesafe (TS + strict mode)
+- 🧠 Local caching with Redux Toolkit
+- 💅 Consistent UI with Tailwind + shadcn/ui
+- 🌐 Axios + interceptors for secure API communication
+
+## 🧱 Folder Structure
 
 ```
 
 src/
-│
-├── app/ # Next.js app routes
-│ ├── \[org]/dashboard/
-│ └── \[org]/status/
-│
-├── components/ # Shared UI components
-├── features/ # Redux slices
-├── hooks/ # Custom hooks (e.g. statusColor logic)
-├── lib/ # Utils (auth, token handling)
-├── constants/ # Config vars
-└── styles/ # Global styles
+├── app/ # App router + layouts + pages
+├── components/ # Reusable UI components
+├── constants/ # Static config and enums
+├── features/ # Redux slices (auth, orgs, services)
+├── hooks/ # Custom React hooks
+├── lib/ # Axios config, utils
+├── styles/ # Tailwind globals
+├── types/ # Global TypeScript types
 
 ```
 
-<br/>
+## 🛠️ Tech Stack
 
-## ⚙️ Setup
+| Tool                  | Purpose                         |
+| --------------------- | ------------------------------- |
+| **Next.js**           | Frontend framework (App Router) |
+| **TypeScript**        | Static typing                   |
+| **Tailwind CSS**      | Utility-first styling           |
+| **shadcn/ui**         | Headless UI components          |
+| **Redux Toolkit**     | State management                |
+| **Axios**             | HTTP requests + interceptors    |
+| **ESLint + Prettier** | Linting & formatting            |
 
-1. **Clone the repo**
+## 🧪 Dev Setup
 
-   ```bash
-   git clone https://github.com/your-org/statuspage-frontend.git
-   cd statuspage-frontend
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Configure environment**
-
-   Create `.env.local`:
-
-   ```env
-   NEXT_PUBLIC_API_BASE_URL=https://your-backend-api.com/api
-   ```
-
-4. **Run the dev server**
-
-   ```bash
-   npm run dev
-   ```
-
-App will run at: `http://localhost:3000/[org]/dashboard`
-
-<br/>
-
-## ✨ Usage Example
-
-Open `http://localhost:3000/google/dashboard` to manage Netflix services.
-
-```ts
-router.push(`/${org}/dashboard`);
-```
-
-Use `useParams()` to extract `org` from URL:
-
-```ts
-const { org } = useParams();
-```
-
-Use `useStatusOptions()` hook to get status color and label:
-
-```ts
-const { statusCodeToColor, statusCodeToString } = useStatusOptions();
-```
-
-<br/>
-
-## 📦 Deployment
-
-Supports deployment on Vercel, Render, or any platform supporting Next.js App Router.
+### 1. Clone & Install
 
 ```bash
-npm run build
-npm start
+git clone https://github.com/priyans-hu/statify-frontend.git
+cd statify-frontend
+npm install
 ```
 
-Make sure your `.env` is properly configured in the production environment.
+### 2. Env Setup
+
+Create `.env.local` from template:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_WEBSOCKET_URL=http://localhost:8000/ws
+```
+
+### 3. Run Dev Server
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🧭 Usage Guide
+
+| Page                                     | Path                   |
+| ---------------------------------------- | ---------------------- |
+| 📋 Service List                          | `/{org}/dashboard`     |
+| 🆕 Create Incident                       | `/{org}/incidents`     |
+| 🆕 Incident history                      | `/{org}/incidents/all` |
+| 🌐 Public Status Page + Active indidents | `/{org}/status`        |
+
+---
+
+## 🧠 Architecture
+
+- App Router layout with separate `dashboard` and `public` views
+- Redux slices for: `auth`, `org`, `services`, `incidents`
+- Axios wrapper in `lib/api.ts` handles token injection & error handling
+- `hooks/useAuth`, `useOrg`, `useService` abstract logic from UI
+- Data displayed using `shadcn/ui` components + icon system
+- Dark mode enabled via Tailwind + `class` strategy
+
+## 🧰 Scripts
+
+```bash
+npm run dev         # Start dev server
+npm run build       # Production build
+npm run eslint      # Run ESLint
+npm run format      # Prettify code
+```
+
+## 📦 Deployment Notes
+
+Deploy via:
+
+- **Vercel** (recommended)
+- **Netlify**
+- **Render static site (if decoupled)**
+
+Ensure `NEXT_PUBLIC_API_BASE_URL` & `NEXT_PUBLIC_WEBSOCKET_URL` is configured with backend URL.
