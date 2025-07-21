@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button, Modal, Input, Select, message } from 'antd';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import api from '@/lib/api';
 import Config from '@/constants/config';
 import IncidentCard from '@/components/incidentCard';
@@ -125,19 +126,20 @@ export default function IncidentsPage() {
             onChange={(e) => setUpdateText(e.target.value)}
             placeholder="Describe what changed or current situation..."
           />
-          <Checkbox
-            id="resolve-incident"
-            title="Resolve incident"
-            checked={resolved}
-            onCheckedChange={(checked) => {
-              if (checked !== 'indeterminate') {
-                setResolved(checked);
-              }
-            }}
-            className="text-white"
-          >
-            Resolve Incident
-          </Checkbox>
+          <div className="flex items-center space-x-2 mt-4">
+            <Checkbox
+              id="resolve-incident"
+              checked={resolved}
+              onCheckedChange={(checked) => {
+                if (checked !== 'indeterminate') {
+                  setResolved(checked);
+                }
+              }}
+            />
+            <Label htmlFor="resolve-incident" className="text-white">
+              Resolve Incident
+            </Label>
+          </div>
         </div>
       </Modal>
     </main>

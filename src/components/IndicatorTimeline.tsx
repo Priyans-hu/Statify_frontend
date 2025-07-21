@@ -15,9 +15,11 @@ export default function IncidentTimeline({ incidents }: Props) {
   return (
     <>
       <div className="space-y-4">
-        {incidents.map((incident) => (
-          <IncidentCard key={incident.id} incident={incident} userRole={userRole} />
-        ))}
+        {incidents
+          .filter((incident) => !incident.resolved_at) // only incidents not resolved
+          .map((incident) => (
+            <IncidentCard key={incident.id} incident={incident} userRole={userRole} />
+          ))}
       </div>
     </>
   );

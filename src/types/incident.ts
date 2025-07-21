@@ -12,6 +12,7 @@ export type Incident = {
   status: string;
   description: string | null;
   started_at: string;
+  resolved_at?: string;
   services: { service_name: string }[];
   updates: IncidentUpdate[];
 };
