@@ -1,16 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { jwtDecode, JwtPayload as DefaultPayload } from 'jwt-decode';
-
-type User = {
-  user_id: string;
-  role: string;
-  org_id: string;
-  username: string;
-  org_slug: string;
-  iat: number; // UNIX timestamp
-  exp: number; // UNIX timestamp
-};
+import { User } from '@/types/user';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

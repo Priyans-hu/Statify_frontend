@@ -12,7 +12,7 @@ import { useStatusOptions } from '@/hooks/useStatusOptions';
 import ServiceCard from '@/components/serviceCard';
 import IncidentTimeline from '@/components/IndicatorTimeline';
 
-import { connectWebSocket } from '../../../lib/websocket';
+import { connectWebSocket } from '@/lib/websocket';
 import SortServices from '@/components/sortServices';
 import { Service } from '@/types/service';
 
@@ -96,7 +96,7 @@ export default function StatusPage() {
             {sortedServices.map((svc) => (
               <ServiceCard
                 key={svc.id}
-                name={svc.service_name}
+                service_name={svc.service_name}
                 status={statusCodeToString(svc.status_code)}
                 bgClass={statusCodeToColor(svc.status_code) || 'bg-slate-700'}
               />
