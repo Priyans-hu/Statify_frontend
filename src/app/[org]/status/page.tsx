@@ -16,8 +16,6 @@ import { connectWebSocket } from '@/lib/websocket';
 import SortServices from '@/components/sortServices';
 import { Service } from '@/types/service';
 
-const uptimeCache: any[] | null = null;
-
 export default function StatusPage() {
   const params = useParams();
   const router = useRouter();
@@ -48,14 +46,6 @@ export default function StatusPage() {
   }, [org]);
 
   const fetchUptimeMetrics = useCallback(async () => {
-    const cached = sessionStorage.getItem(`uptimeMetrics-${org}`);
-
-    if (cached && cached?.length > 0) {
-      console.log('Using sessionStorage cache: uptime metrics');
-      setUptimeMetrics(JSON.parse(cached));
-      return;
-    }
-
     try {
       const res = await axios.get(`${Config.API_BASE_URL}/metrics/?org=${org}`);
       const metrics = res.data.services_uptime;
@@ -69,8 +59,6 @@ export default function StatusPage() {
   const mergeServicesWithUptime = (services: Service[], uptimeMetrics: any): Service[] => {
     const uptimeMap = new Map<number, { uptime: number; status: string }>();
 
-    uptimeMetrics = uptimeMetrics?.length > 0 ? uptimeMetrics : uptimeCache;
-    console.log(uptimeMetrics);
     for (const uptimeSvc of uptimeMetrics) {
       uptimeMap.set(uptimeSvc.id, {
         uptime: uptimeSvc.uptime,
@@ -78,13 +66,13 @@ export default function StatusPage() {
       });
     }
 
+    console.log('computing');
     return services.map((service) => {
       const match = uptimeMap.get(Number(service.id));
 
       const status = match?.status ?? service.status ?? 'Unknown';
       const uptime = match?.uptime != null ? `${match.uptime.toFixed(2)}%` : undefined;
 
-      console.log(service.id, uptime);
       return {
         ...service,
         status,
@@ -102,7 +90,7 @@ export default function StatusPage() {
         await fetchIncidents(); // get active incidents
         await fetchUptimeMetrics(); // get metrics for service
         const serviceWithUptime = mergeServicesWithUptime(services, uptimeMetrics); // map uptime with service to service id
-        setServices(serviceWithUptime ?? services);
+        if (serviceWithUptime.length > 0) setServices(serviceWithUptime);
       } catch (err) {
         console.error('Initialization failed:', err);
       } finally {
@@ -118,10 +106,12 @@ export default function StatusPage() {
       const data = recievedData.data;
       const objectType = recievedData.type as 'service' | 'incident';
       const updateData = data[objectType];
+
       const funcCall = {
         service: setServices,
         incident: setIncidents,
       };
+
       if (updateData) {
         funcCall[objectType]((prev: any[]) => {
           const index = prev.findIndex((svc) => svc.id == updateData.id);
