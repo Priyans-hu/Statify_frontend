@@ -45,7 +45,7 @@ export default function IncidentsPage() {
           <h1 className="text-xl font-semibold">All Incidents</h1>
           {user?.role === 'admin' && user.org_slug === org && (
             <h2
-              onClick={() => router.push(`${org}/incidents/`)}
+              onClick={() => router.push(`/${org}/incidents/`)}
               className="text-xl font-medium mb-2 underline cursor-pointer"
             >
               Manage Active Incidents
