@@ -31,6 +31,7 @@ export default function StatusPage() {
     try {
       const res = await axios.get(`${Config.API_BASE_URL}/services?org=${org}`);
       setServices(res.data);
+      return res.data;
     } catch (err) {
       console.error('Failed to load services:', err);
     }
@@ -59,6 +60,11 @@ export default function StatusPage() {
   const mergeServicesWithUptime = (services: Service[], uptimeMetrics: any): Service[] => {
     const uptimeMap = new Map<number, { uptime: number; status: string }>();
 
+    if (!services?.length || !uptimeMetrics?.length) {
+      console.warn('Missing services or uptime metrics');
+      return services;
+    }
+
     for (const uptimeSvc of uptimeMetrics) {
       uptimeMap.set(uptimeSvc.id, {
         uptime: uptimeSvc.uptime,
@@ -66,8 +72,8 @@ export default function StatusPage() {
       });
     }
 
-    console.log('computing');
     return services.map((service) => {
+      console.log('computing');
       const match = uptimeMap.get(Number(service.id));
 
       const status = match?.status ?? service.status ?? 'Unknown';
@@ -99,7 +105,7 @@ export default function StatusPage() {
     };
 
     initialize();
-  }, [fetchIncidents, fetchServices, dispatch, org]);
+  }, [fetchIncidents, fetchServices, fetchUptimeMetrics, dispatch, org]);
 
   const handleIncomingMessage = (recievedData: { data: any; type: any }) => {
     if (recievedData && recievedData.data && recievedData.type) {
