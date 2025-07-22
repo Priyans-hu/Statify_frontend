@@ -36,6 +36,12 @@ export default function NewIncidentPage() {
     services: [] as number[],
   });
 
+  const [formErrors, setFormErrors] = useState({
+    title: '',
+    status: '',
+    services: '',
+  });
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -53,7 +59,32 @@ export default function NewIncidentPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const validateForm = () => {
+    const errors = {
+      title: '',
+      status: '',
+      services: '',
+    };
+
+    if (!formData.title.trim()) {
+      errors.title = 'Title is required.';
+    }
+
+    if (!formData.status) {
+      errors.status = 'Status is required.';
+    }
+
+    if (formData.services.length === 0) {
+      errors.services = 'Please select at least one service.';
+    }
+
+    setFormErrors(errors);
+    return Object.values(errors).every((error) => error === '');
+  };
+
   const handleSubmit = async () => {
+    if (!validateForm()) return;
+
     const payload = {
       title: formData.title,
       description: formData.description || null,
@@ -89,6 +120,7 @@ export default function NewIncidentPage() {
             onChange={(e) => handleChange('title', e.target.value)}
             placeholder="Incident title"
           />
+          {formErrors.title && <p className="text-red-500 text-sm mt-1">{formErrors.title}</p>}
         </div>
 
         <div>
@@ -104,6 +136,7 @@ export default function NewIncidentPage() {
               <SelectItem value="resolved">Resolved</SelectItem>
             </SelectContent>
           </Select>
+          {formErrors.status && <p className="text-red-500 text-sm mt-1">{formErrors.status}</p>}
         </div>
 
         <div>
@@ -162,6 +195,9 @@ export default function NewIncidentPage() {
               })}
             </div>
           </div>
+          {formErrors.services && (
+            <p className="text-red-500 text-sm mt-1">{formErrors.services}</p>
+          )}
         </div>
 
         <Button onClick={handleSubmit} disabled={loading} className="bg-blue-600 hover:bg-blue-700">

@@ -95,8 +95,6 @@ export default function StatusPage() {
         await fetchServices(); // get services
         await fetchIncidents(); // get active incidents
         await fetchUptimeMetrics(); // get metrics for service
-        const serviceWithUptime = mergeServicesWithUptime(services, uptimeMetrics); // map uptime with service to service id
-        if (serviceWithUptime.length > 0) setServices(serviceWithUptime);
       } catch (err) {
         console.error('Initialization failed:', err);
       } finally {
@@ -106,6 +104,12 @@ export default function StatusPage() {
 
     initialize();
   }, [fetchIncidents, fetchServices, fetchUptimeMetrics, dispatch, org]);
+
+  useEffect(() => {
+    // map uptime with service to service id
+    const serviceWithUptime = mergeServicesWithUptime(services, uptimeMetrics);
+    if (serviceWithUptime.length > 0) setServices(serviceWithUptime);
+  }, [uptimeMetrics]);
 
   const handleIncomingMessage = (recievedData: { data: any; type: any }) => {
     if (recievedData && recievedData.data && recievedData.type) {

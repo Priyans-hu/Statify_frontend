@@ -24,15 +24,16 @@ export default function Header() {
   const [loggedInUser, setLoggedInUser] = useState<any | null>(null);
 
   const handleClick = (path: string) => {
-    dispatch(setLoading(true));
     if (org) {
       const targetPath = `/${org}${path}`;
       if (pathname !== targetPath) {
+        dispatch(setLoading(true));
         router.push(targetPath);
       }
     } else {
       const targetPath = path;
       if (pathname !== targetPath) {
+        dispatch(setLoading(true));
         router.push(targetPath);
       }
     }
