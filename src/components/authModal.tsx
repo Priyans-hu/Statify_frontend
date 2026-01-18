@@ -16,7 +16,7 @@ const { Option } = Select;
 export default function AuthModal({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const [isLogin, setIsLogin] = useState(true);
   const dispatch = useDispatch();
-  const [organizations, setOrganizations] = useState<any[]>([]);
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,7 +25,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         const response = await api.get('/organizations');
         setOrganizations(response.data as Organization[]);
       } catch (err: any) {
-        console.error('Failed to fetch organizations', err);
         toast.error(err.response?.data?.message || 'Failed to fetch organizations');
       }
     };
@@ -60,7 +59,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.error('Login failed');
       }
     } catch (error) {
-      console.error(error);
       toast.error(`Login error`);
     } finally {
       setCurrentLoading(false);
@@ -83,7 +81,7 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.success('Registered successfully, you can login now');
         form.resetFields();
         const organization = organizations.find((org) => org.id === values.org_id);
-        if (organization.slug) {
+        if (organization?.slug) {
           setIsLogin(true);
           router.push(`/${organization.slug}/status`);
         } else {
@@ -93,7 +91,6 @@ export default function AuthModal({ visible, onClose }: { visible: boolean; onCl
         toast.error(' failed');
       }
     } catch (error) {
-      console.error(error);
       toast.error(`Registration error`);
     } finally {
       setCurrentLoading(false);
