@@ -1,0 +1,64 @@
+# Statify Frontend - Cursor IDE Rules
+
+## Project Context
+This is a Next.js frontend for a multi-tenant status page system using TypeScript and shadcn/ui.
+
+## Code Style
+- TypeScript for all files
+- Use functional components with hooks
+- Prefer named exports
+- Use `@/` path alias for imports
+
+## Framework
+- Next.js 14+ with App Router
+- Pages in `src/app/`
+- Components in `src/components/`
+
+## Styling
+- TailwindCSS utility classes
+- shadcn/ui for component primitives
+- No inline styles
+
+## Component Patterns
+```tsx
+// Prefer this structure
+interface ComponentProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+export function Component({ title, children }: ComponentProps) {
+  return (
+    <div className="p-4">
+      <h1>{title}</h1>
+      {children}
+    </div>
+  );
+}
+```
+
+## shadcn/ui Usage
+- Import from `@/components/ui/`
+- Add new components: `npx shadcn-ui@latest add [name]`
+- Available: Button, Card, Input, Dialog, etc.
+
+## State Management
+- React hooks for local state
+- Custom hooks in `src/hooks/`
+- No Redux (keep it simple)
+
+## API Calls
+- Use fetch or custom API client
+- Handle loading and error states
+- Type all responses
+
+## File Naming
+- Components: PascalCase (`ServiceCard.tsx`)
+- Utilities: camelCase (`formatDate.ts`)
+- Types: PascalCase (`Service.ts`)
+
+## Best Practices
+- Keep components under 200 lines
+- Extract logic to custom hooks
+- Use TypeScript strictly (no `any`)
+- Handle loading and error states

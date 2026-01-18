@@ -1,0 +1,47 @@
+# Statify Frontend
+
+> Real-time status page system frontend built with Next.js
+
+## What is this?
+Statify frontend is the web interface for a multi-tenant status page system that allows:
+- Dashboard for managing service health status
+- Incident logging and management
+- Real-time status updates via WebSocket
+- Public status pages for end users
+
+## Tech Stack
+- Next.js 14+ with App Router
+- TypeScript
+- TailwindCSS
+- shadcn/ui component library
+- WebSocket for real-time updates
+
+## Features
+- Organization dashboard
+- Service management
+- Incident management with status tracking
+- Real-time status updates
+- Public status page
+- Responsive design
+
+## Project Structure
+- `/src/app` - Next.js App Router pages
+- `/src/components` - Reusable UI components
+- `/src/features` - Feature-specific components
+- `/src/lib` - Utilities and API client
+- `/src/types` - TypeScript definitions
+
+## Development
+```bash
+npm install
+npm run dev
+```
+
+## Repository
+https://github.com/Priyans-hu/Statify_frontend
+
+## Related
+- Backend API: https://github.com/Priyans-hu/Statify_backend
+
+## License
+MIT
