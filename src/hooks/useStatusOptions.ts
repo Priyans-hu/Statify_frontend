@@ -23,7 +23,7 @@ export const useStatusOptions = () => {
       setStatusOptions(res.data);
       cachedStatusOptions = res.data;
     } catch (error) {
-      console.error('Failed to load status options', error);
+      // Error handled silently - status options will be empty
     }
   };
 

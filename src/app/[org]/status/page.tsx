@@ -15,6 +15,13 @@ import IncidentTimeline from '@/components/IndicatorTimeline';
 import { connectWebSocket } from '@/lib/websocket';
 import SortServices from '@/components/sortServices';
 import { Service } from '@/types/service';
+import { Incident } from '@/types/incident';
+
+interface UptimeMetric {
+  id: number;
+  uptime: number;
+  status: string;
+}
 
 export default function StatusPage() {
   const params = useParams();
@@ -24,8 +31,8 @@ export default function StatusPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [sortedServices, setSortedServices] = useState<Service[]>(services);
   const { statusCodeToColor, statusCodeToString } = useStatusOptions();
-  const [incidents, setIncidents] = useState<any[]>([]);
-  const [uptimeMetrics, setUptimeMetrics] = useState<any[]>([]);
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [uptimeMetrics, setUptimeMetrics] = useState<UptimeMetric[]>([]);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -33,7 +40,7 @@ export default function StatusPage() {
       setServices(res.data);
       return res.data;
     } catch (err) {
-      console.error('Failed to load services:', err);
+      // Error handled silently - services will show empty state
     }
   }, [org]);
 
@@ -42,7 +49,7 @@ export default function StatusPage() {
       const res = await axios.get(`${Config.API_BASE_URL}/incidents/active?org=${org}`);
       setIncidents(res?.data?.incidents || []);
     } catch (err) {
-      console.error('Failed to load incidents:', err);
+      // Error handled silently - incidents will show empty state
     }
   }, [org]);
 
@@ -53,15 +60,14 @@ export default function StatusPage() {
       sessionStorage.setItem(`uptimeMetrics-${org}`, JSON.stringify(metrics));
       setUptimeMetrics(metrics);
     } catch (err) {
-      console.error('Failed to load incidents:', err);
+      // Error handled silently - metrics will show empty state
     }
   }, [org]);
 
-  const mergeServicesWithUptime = (services: Service[], uptimeMetrics: any): Service[] => {
+  const mergeServicesWithUptime = (services: Service[], uptimeMetrics: UptimeMetric[]): Service[] => {
     const uptimeMap = new Map<number, { uptime: number; status: string }>();
 
     if (!services?.length || !uptimeMetrics?.length) {
-      console.warn('Missing services or uptime metrics');
       return services;
     }
 
@@ -73,7 +79,6 @@ export default function StatusPage() {
     }
 
     return services.map((service) => {
-      console.log('computing');
       const match = uptimeMap.get(Number(service.id));
 
       const status = match?.status ?? service.status ?? 'Unknown';
@@ -96,7 +101,7 @@ export default function StatusPage() {
         await fetchIncidents(); // get active incidents
         await fetchUptimeMetrics(); // get metrics for service
       } catch (err) {
-        console.error('Initialization failed:', err);
+        // Initialization error handled silently
       } finally {
         dispatch(setLoading(false));
       }

@@ -9,7 +9,7 @@ export function connectWebSocket(orgSlug, onMessageCallback) {
   messageCallback = onMessageCallback;
 
   socket.onopen = () => {
-    console.log('WebSocket connected');
+    // WebSocket connected
   };
 
   socket.onmessage = (event) => {
@@ -20,11 +20,11 @@ export function connectWebSocket(orgSlug, onMessageCallback) {
   };
 
   socket.onclose = () => {
-    console.warn('WebSocket disconnected');
+    // WebSocket disconnected
   };
 
   socket.onerror = (err) => {
-    console.error('WebSocket error:', err);
+    // WebSocket error handled silently
   };
 }
 

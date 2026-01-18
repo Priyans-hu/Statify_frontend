@@ -18,7 +18,7 @@ export function setItem<T>(key: string, value: T): void {
     const json = JSON.stringify(value);
     localStorage.setItem(key, json);
   } catch (err) {
-    console.error(`Error setting item "${key}" to localStorage`, err);
+    // localStorage error handled silently
   }
 }
 
@@ -33,7 +33,6 @@ export function getItem<T>(key: string): T | null {
     const json = localStorage.getItem(key);
     return json ? (JSON.parse(json) as T) : null;
   } catch (err) {
-    console.error(`Error getting item "${key}" from localStorage`, err);
     return null;
   }
 }
@@ -45,7 +44,7 @@ export function clearItem(key: string): void {
   try {
     localStorage.removeItem(key);
   } catch (err) {
-    console.error(`Error clearing item "${key}" from localStorage`, err);
+    // localStorage error handled silently
   }
 }
 
@@ -57,7 +56,6 @@ export function getLoggedInUser(): User | null {
   const user: User | null = token ? (decodeToken(token) as User) : null;
 
   if (!user) {
-    console.warn('No user found in localStorage');
     return null;
   }
 

@@ -20,12 +20,13 @@ import { toast } from 'react-toastify';
 import { getItem } from '@/lib/utils';
 import { useStatusOptions } from '@/hooks/useStatusOptions';
 import { useRouter, useParams } from 'next/navigation';
+import { Service } from '@/types/service';
 
 export default function DashboardPage() {
   const params = useParams();
   const router = useRouter();
   const org = params?.org;
-  const [services, setServices] = useState<any[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [name, setName] = useState('');
   const [status, setStatus] = useState('');
   const { statusOptions, statusCodeToColor, statusCodeToString } = useStatusOptions();
@@ -48,7 +49,6 @@ export default function DashboardPage() {
       const res = await axios(config);
       setServices(res.data);
     } catch (error) {
-      console.error('Error fetching services:', error);
       toast.error('Failed to fetch services');
     } finally {
       setCurrentLoading(false);
@@ -83,7 +83,6 @@ export default function DashboardPage() {
       toast.success('Service added successfully');
       fetchServices();
     } catch (error) {
-      console.error('Error adding service:', error);
       toast.error('Failed to add service');
     } finally {
       setCurrentLoading(false);
@@ -105,7 +104,6 @@ export default function DashboardPage() {
       await axios(config);
       fetchServices();
     } catch (error) {
-      console.error('Error updating status:', error);
       toast.error('Failed to update service status');
     } finally {
       setCurrentLoading(false);

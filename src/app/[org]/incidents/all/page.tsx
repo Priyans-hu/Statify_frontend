@@ -28,7 +28,7 @@ export default function IncidentsPage() {
       });
       setIncidents(res.data.incidents);
     } catch (err) {
-      console.error('Failed to fetch incidents:', err);
+      // Error handled silently - incidents will show empty state
     } finally {
       dispatch(setLoading(false));
     }
